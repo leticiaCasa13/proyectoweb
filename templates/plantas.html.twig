@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+</head>
+<body>
+    {% include 'layouts/header.html.twig' %} {# Incluye el menú principal #}
+
+    <main class="container my-5">
+        <h1></h1>
+        <p>{{ description }}</p>
+        <ul>
+            {% for planta in plantas %}
+                <li>{{ planta }}</li>
+            {% endfor %}
+        </ul>
+    </main>
+
+    {% include 'layouts/footer.html.twig' %} {# Incluye el pie de página #}
+</body>
+</html>
+

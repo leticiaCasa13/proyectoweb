@@ -1,0 +1,91 @@
+/* Estilos generales */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* Estilos del menú principal */
+header {
+    background-color: #f8f9fa; /* Fondo claro */
+    padding: 10px;
+}
+
+header nav a {
+    margin-right: 15px; /* Espaciado entre enlaces */
+    color: #000; /* Color de texto */
+    text-decoration: none; /* Sin subrayado */
+}
+
+header nav a:hover {
+    color: #007bff; /* Color azul al pasar el mouse */
+}
+
+/* Estilos del formulario */
+.form-container {
+    max-width: 400px;
+    margin: 0 auto;
+    background: rgb(162, 192, 201);
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-container h2 {
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group button {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.form-group button {
+    background-color: #5cb85c;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+}
+
+.form-group button:hover {
+    background-color: #4cae4c;
+
+}
+
+
+/* Estilos del footer */
+.footer {
+    position: relative; /* Para que siempre esté al final de la página */
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    background-color: #007f00; /* Fondo verde */
+    color: white; /* Texto blanco */
+    padding: 10px 0; /* Espaciado interno */
+    font-size: 14px; /* Tamaño de fuente adecuado */
+    display: flex; /* Activa el modelo de caja flexible */
+    justify-content: center; /* Centra horizontalmente los elementos dentro */
+    align-items: center; /* Centra verticalmente los elementos dentro */
+    border-top: 1px solid #e0e0e0; /* Línea superior opcional */
+}
+
+main {
+    margin-bottom: 100px; /* ajusta según la altura del footer */
+    overflow: hidden; /*Evita que el contenido desborde */
+}
+

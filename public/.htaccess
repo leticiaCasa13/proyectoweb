@@ -1,0 +1,10 @@
+# Habilitar la reescritura de URL
+RewriteEngine On
+
+# Rutas para archivos estáticos
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+# Rutas para solicitudes gestionadas por PHP
+RewriteRule ^ index.php [L]
+
