@@ -1,5 +1,6 @@
 /* Estilos generales */
 body {
+    background-color: #fffde7;
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
@@ -7,18 +8,20 @@ body {
 
 /* Estilos del menú principal */
 header {
-    background-color: #f8f9fa; /* Fondo claro */
+    background-color: #007f00; /* Fondo claro */
+    color: white;
     padding: 10px;
 }
 
-header nav a {
+header .navbar-nav .nav-link {
     margin-right: 15px; /* Espaciado entre enlaces */
-    color: #000; /* Color de texto */
+    color: white; /* Color negro */
     text-decoration: none; /* Sin subrayado */
+    font-weight: bold;
 }
 
-header nav a:hover {
-    color: #007bff; /* Color azul al pasar el mouse */
+header .navbar-nav .nav-link:hover {
+    color: #ffdd00; /* Color amarillo al pasar el mouse */
 }
 
 /* Estilos del formulario */
@@ -74,8 +77,8 @@ header nav a:hover {
     left: 0;
     width: 100%;
     text-align: center;
-    background-color: #007f00; /* Fondo verde */
-    color: white; /* Texto blanco */
+    background-color: #007f00; /* amarillo */
+    color: white; /* Texto negro */
     padding: 10px 0; /* Espaciado interno */
     font-size: 14px; /* Tamaño de fuente adecuado */
     display: flex; /* Activa el modelo de caja flexible */
@@ -85,6 +88,7 @@ header nav a:hover {
 }
 
 main {
+    background-color: #ffffcc;
     margin-bottom: 100px; /* ajusta según la altura del footer */
     overflow: hidden; /*Evita que el contenido desborde */
 }
