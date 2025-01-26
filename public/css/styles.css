@@ -1,27 +1,104 @@
 /* Estilos generales */
-body {
-    background-color: #fffde7;
+html, body {
+    height: 100%;
+    background-color: #ffffff; /* Blanco */
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
 }
 
+body {
+    display: flex;
+    flex-direction: column; /* Diseño en columnas */
+    min-height: 100vh; /* Asegura altura mínima igual a la ventana */
+}
+
+
+
 /* Estilos del menú principal */
 header {
-    background-color: #007f00; /* Fondo claro */
-    color: white;
-    padding: 10px;
+    background-color: #7c7878; /* Fondo claro, recién cambiado */
+    padding: 10px 20px;
 }
 
 header .navbar-nav .nav-link {
-    margin-right: 15px; /* Espaciado entre enlaces */
-    color: white; /* Color negro */
-    text-decoration: none; /* Sin subrayado */
-    font-weight: bold;
+    margin-right: 20px; /* Espaciado entre enlaces */
+    font-size: 15px;
 }
 
 header .navbar-nav .nav-link:hover {
-    color: #ffdd00; /* Color amarillo al pasar el mouse */
+    color: #c5c3bb; /* Color gris al pasar el mouse */
+}
+
+header .d-flex a {
+    font-size: 15px;
+    margin-right: 20px;
+    display: flex;
+    align-items: center; /* Alinear verticalmente */
+    gap: 5px; /* Espacio entre ícono y texto */
+    text-decoration: none;
+    color: #fff; /* Texto blanco */
+}
+
+header .d-flex a:hover {
+    color: #c5c3bb; /* Color gris al pasar el mouse */
+}
+
+.navbar-toggler {
+    background-color: #c5c3bb; /* Color del botón */
+    border: 1px solid #c5c3bb; /* Borde del botón */
+}
+
+.navbar-toggler:hover {
+    background-color: #c5c3bb; /* Color del botón al pasar el mouse */
+}
+
+/* Logo centrado en el header */
+.navbar-brand.mx-auto {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Estilo de los íconos y enlaces */
+.d-flex {
+    display: flex;
+    justify-content: space-between; /* Asegura que los elementos estén en los extremos */
+    align-items: center;
+}
+
+.d-flex a {
+    font-size: 14px;
+    margin-right: 20px;
+    text-decoration: none;
+    color: #333;
+}
+
+.d-flex a:hover {
+    color: #333 !important; /* Fuerza el color gris oscuro */
+}
+
+/* Para mejorar el espaciado entre el menú y el logo */
+.navbar-nav {
+    margin-right: 40px; /* Ajusta el espacio entre el menú y el borde del header */
+}
+
+/* Cambiar el color de las letras del nuevo menú */
+.nuevo-menu .nav-link {
+    color: #4CAF50; /* Verde suave */
+    font-weight: bold; /* Letras en negrita */
+    text-decoration: none; /* Sin subrayado */
+}
+
+/* Efecto hover para el menú */
+.nuevo-menu .nav-link:hover {
+    color: #388E3C; /* Verde más oscuro al pasar el mouse */
+    text-decoration: underline; /* Subrayado al pasar el mouse */
+}
+
+.nuevo-menu {
+    position: relative; /* Relativo al contenedor principal */
+    top: 50px; /* Baja el menú 50px hacia abajo */
 }
 
 /* Estilos del formulario */
@@ -66,30 +143,36 @@ header .navbar-nav .nav-link:hover {
 
 .form-group button:hover {
     background-color: #4cae4c;
-
 }
-
 
 /* Estilos del footer */
 .footer {
-    position: relative; /* Para que siempre esté al final de la página */
-    bottom: 0;
-    left: 0;
+    position: relative; /* Permite que el footer respete el flujo natural de la página */
     width: 100%;
-    text-align: center;
-    background-color: #007f00; /* amarillo */
-    color: white; /* Texto negro */
-    padding: 10px 0; /* Espaciado interno */
-    font-size: 14px; /* Tamaño de fuente adecuado */
-    display: flex; /* Activa el modelo de caja flexible */
-    justify-content: center; /* Centra horizontalmente los elementos dentro */
-    align-items: center; /* Centra verticalmente los elementos dentro */
-    border-top: 1px solid #e0e0e0; /* Línea superior opcional */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ccc; /* Gris */
+    color: white; /* Texto blanco */
+    padding: 20px 0;
+    font-size: 14px;
+    border-top: 1px solid #e0e0e0; /* Línea superior */
 }
 
+
+.card-body {
+    min-height: 150px; /* Ajusta el tamaño mínimo según el texto */
+}
+
+
 main {
-    background-color: #ffffcc;
-    margin-bottom: 100px; /* ajusta según la altura del footer */
-    overflow: hidden; /*Evita que el contenido desborde */
+    background-color: #ffffff;
+    overflow: hidden; /* Evita que el contenido desborde */
+    padding-bottom: 100px; /* Espaciado inferior */
+}
+
+main.container {
+    width: 100%; /* Asegura que ocupe todo el ancho disponible */
+    margin: 0 auto; /* Centra el contenido */
 }
 
