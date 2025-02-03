@@ -2,6 +2,24 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+$config = require __DIR__ . '/../api/config/database.php';
+require_once __DIR__ . '/../src/controller/AuthController.php';
+
+use controller\AuthController;
+
+$authController = new AuthController($config);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['REQUEST_URI'] === '/api/login') {
+    $email = $_POST['email'] ?? '';
+    $password = $_POST['password'] ?? '';
+
+    $response = $authController->authenticate($email, $password);
+    header('Content-Type: application/json');
+    echo json_encode($response);
+    exit;
+}
+
+
 // Mensaje de conexión
 echo "¡Conexión establecida!<br>";
 
