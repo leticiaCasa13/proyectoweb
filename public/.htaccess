@@ -5,6 +5,12 @@ RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} -f
 RewriteRule ^ - [L]
 
+#Redirigir solicitudes a /api/login al archivo login.php
+RewriteRule ^api/login$ /api/login.php [L]
+
+# Redirigir solicitudes de /api/register al archivo register.php
+RewriteRule ^api/register$ /api/register.php [L]
+
 # Rutas para solicitudes gestionadas por PHP
 RewriteRule ^ index.php [L]
 

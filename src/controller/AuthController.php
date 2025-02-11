@@ -4,7 +4,13 @@ namespace controller;
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use src\Database; //asegurar q se importe la clase Database
 use PDO;
+
+if (!class_exists('src\Database')) {
+    require __DIR__ . '/../Database.php';
+}
+
 
 class AuthController {
     private $db;
@@ -12,16 +18,9 @@ class AuthController {
 
     public function __construct($config) {
         $this->jwtSecret = $config['jwt_secret'];
-        try {
-            $this->db = new PDO(
-                "mysql:host={$config['host']};dbname={$config['database']};charset={$config['charset']}",
-                $config['username'],
-                $config['password']
-            );
-            $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch (\PDOException $e) {
-            die("Error de conexión a la base de datos: " . $e->getMessage());
-        }
+       
+        //usamos la clase Database en lugar de crear una nueva conexión
+        $this->db = Database::getInstance($config)->getConnection();
     }
 
     public function authenticate($email, $password) {
@@ -64,6 +63,6 @@ class AuthController {
                 'status' => 'error',
                 'message' => 'Credenciales incorrectas'
             ];
-        }
+        }    //ahora AuthController usa la misma conexión de la bd que register.php
     }
 }

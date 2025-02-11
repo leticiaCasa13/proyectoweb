@@ -2,7 +2,8 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-$config = require __DIR__ . '/../api/config/database.php';
+$config = require __DIR__ . '/api/config/database.php';
+
 require_once __DIR__ . '/../src/controller/AuthController.php';
 
 use controller\AuthController;

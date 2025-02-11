@@ -1,9 +1,15 @@
 <?php
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+
 header("Content-Type: application/json");
 
-require __DIR__ . "/../vendor/autoload.php"; // Cargar la librería JWT
-require __DIR__ . "/../config/database.php"; // Cargar configuración de la BD
-require __DIR__ . "/../src/controller/AuthController.php"; // Cargar controlador
+require __DIR__ . "/../../vendor/autoload.php"; // Cargar la librería JWT
+$config = require __DIR__ . "/config/database.php"; // ✅ Asegurar que la variable existe
+
+require __DIR__ . "/../../src/controller/AuthController.php"; // Cargar controlador
 
 use controller\AuthController;
 
@@ -16,3 +22,8 @@ $password = $input['password'] ?? '';
 
 $response = $authController->authenticate($email, $password);
 echo json_encode($response);
+
+
+
+
+

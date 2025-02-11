@@ -79,6 +79,15 @@ function getRouteData($request) {
                 ],
             ];
 
+        case '/register': // Página de registro
+            return [
+                    'template' => 'register.html.twig',
+                    'data' => [
+                        'title' => 'Registro de Usuario',
+                   
+                    ],
+            ];
+
         case '/carrito': // Página del carrito
             return [
                 'template' => 'carrito.html.twig',
