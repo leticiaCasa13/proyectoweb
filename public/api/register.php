@@ -65,3 +65,6 @@ if ($stmt->execute([$username, $email, $password])) {
 }
 
 // Ya no es necesario el bloque de "Error desconocido", ya que hemos detenido la ejecución con `exit;` en cada respuesta.
+
+
+

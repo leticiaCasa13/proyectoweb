@@ -13,5 +13,7 @@ return [
  // Clave secreta para JWT
     'jwt_secret' => 'e69621b72b1c5ff261ed9aee45f6155bd109ed99011c5ac73fe492d6ed3ae08f',  
 
+     
+
 
 ];

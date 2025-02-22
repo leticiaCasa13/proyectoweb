@@ -24,7 +24,11 @@ class AuthController {
     }
 
     public function authenticate($email, $password) {
+           global $config;
+           
+
         // Buscar usuario por email
+
         $stmt = $this->db->prepare("SELECT * FROM User WHERE email = ?");
         $stmt->execute([$email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -66,3 +70,5 @@ class AuthController {
         }    //ahora AuthController usa la misma conexión de la bd que register.php
     }
 }
+
+

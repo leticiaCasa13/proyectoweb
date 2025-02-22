@@ -1,0 +1,11 @@
+msgid "User not found"
+msgstr "User not found"
+
+msgid "Incorrect credentials"
+msgstr "Incorrect credentials"
+
+msgid "Registration successful"
+msgstr "Registration successful"
+
+msgid "Error registering user"
+msgstr "Error registering user"

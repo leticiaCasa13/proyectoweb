@@ -26,33 +26,42 @@
     </main>
     {% include 'layouts/footer.html.twig' %}
 
-    <script>
-        document.getElementById("loginForm").addEventListener("submit", async function(event) {
-            event.preventDefault();
+   <script>
+    document.getElementById("loginForm").addEventListener("submit", function(event) {
+        event.preventDefault();
 
-            let formData = {
-                email: document.getElementById("email").value,
-                password: document.getElementById("password").value
-            };
+        let formData = {
+            email: document.getElementById("email").value,
+            password: document.getElementById("password").value
+        };
 
-            let response = await fetch("/api/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(formData)
-            });
-
-            let result = await response.json();
-
-            if (response.ok && result.token) {
+        fetch("/api/login.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.status === "success") {
                 localStorage.setItem("token", result.token);
-                alert("Inicio de sesión exitoso");
-                window.location.href = "/"; // Redirigir a la página principal
+                localStorage.setItem("email", formData.email);
+                window.location.href = "/";
             } else {
-                alert("Error: " + (result.message || "Credenciales incorrectas"));
+                alert(result.message);
             }
-        });
-    </script>
+        })
+        .catch(error => console.error("Error:", error));
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        let email = localStorage.getItem("email");
+        if (email) {
+            document.getElementById("userEmail").innerText = "Hola, " + email;
+        }
+    });
+</script>
+
 </body>
 </html>

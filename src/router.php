@@ -15,7 +15,7 @@ function getRouteData($request) {
             return [
                 'template' => 'home.html.twig',
                 'data' => [
-                    'title' => 'Germina Luz',
+                    'title' => 'Vivero Online',
                 ],
             ];
 

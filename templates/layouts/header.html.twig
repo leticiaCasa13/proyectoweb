@@ -1,9 +1,6 @@
 <header style="background-color: #ccc; padding: 20px 20px;">
-   
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container-fluid d-flex align-items-center justify-content-between">
-
-            <!-- Menú alineado hacia la izq con márgen más equilibrado -->
 
             <div class="collapse navbar-collapse" id="navbarNav" style="margin-left: 150px;">
                 <ul class="navbar-nav">
@@ -22,34 +19,60 @@
                 </ul>
             </div>
 
-            <!-- Iconos centrados -->
-             <div class="d-flex align-items-center" style="margin-right: 150px; gap: 15px;">
-                <div>
+            <div class="d-flex align-items-center" style="margin-right: 150px; gap: 15px;">
+                <!-- Enlace de Ingresar -->
+                <div id="loginLink">
                     <a href="/login" class="text-white" style="text-decoration: none;">
                         <i class="bi bi-person-circle"></i> Ingresar
                     </a>
                 </div>
-
-                   <!-- Nuevo enlace de Registro -->
-                <div>
+                <!-- Enlace de Registro -->
+                <div id="registerLink">
                     <a href="/register" class="text-white" style="text-decoration: none;">
                         <i class="bi bi-person-plus"></i> Registro
                     </a>
                 </div>
-
                 <!-- Carrito de compras -->
                 <div>
                     <a href="/carrito" class="text-white" style="text-decoration: none;">
                         <i class="bi bi-cart3"></i> €0,00
-
                     </a>
                 </div>
+            <!-- 🔹 Email del usuario + Botón de Logout -->
+           <div id="logoutContainer" class="d-flex align-items-center" style="display: none; gap: 10px;">
+                <p id="userEmail" class="m-0 text-white"></p> <!-- Texto en blanco -->
+                <button id="logoutBtn" class="btn btn-success btn-sm">Cerrar Sesión</button> <!-- Botón de logout con Bootstrap -->
+           </div>
+
             </div>
         </div>
     </nav>
 
+    
+
 </header>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let email = localStorage.getItem("email");
+
+        if (email) {
+            document.getElementById("userEmail").innerText = "Hola, " + email;
+            document.getElementById("logoutContainer").style.display = "inline-block"; // Muestra el botón de logout
+            
+            // Ocultar "Ingresar" y "Registro" si el usuario está logueado
+            document.getElementById("loginLink").style.display = "none";
+            document.getElementById("registerLink").style.display = "none";
+        }
+
+        document.getElementById("logoutBtn").addEventListener("click", function() {
+            localStorage.removeItem("email");
+            localStorage.removeItem("token");
+            document.getElementById("logoutContainer").style.display = "none"; // Ocultar el contenedor de logout
+            window.location.href = "/login"; // Redirigir al login
+        });
+    });
+</script>
 
 
 

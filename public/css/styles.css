@@ -53,6 +53,20 @@ header .d-flex a:hover {
     background-color: #c5c3bb; /* Color del botón al pasar el mouse */
 }
 
+.page-title {
+    font-family: 'Arial', sans-serif; /* Fuente personalizada */
+    color: #4CAF50;                   /* Color verde */
+    font-size: 2.5rem;                /* Tamaño de fuente */
+    text-align: center;               /* Centrado */
+    font-weight: bold;                /* Negrita */
+}
+
+
+#userEmail {
+    color: #fff; /* Texto en blanco */
+    font-weight: bold;
+}
+
 /* Logo centrado en el header */
 .navbar-brand.mx-auto {
     display: flex;
