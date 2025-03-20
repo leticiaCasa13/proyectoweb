@@ -1,5 +1,9 @@
 <?php
 
+// ACTIVAR ERRORES
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 // Directorio donde están tus vistas (plantillas o archivos Twig)
 $viewDir = __DIR__ . '/../templates/';
 
@@ -10,14 +14,13 @@ $request = rtrim(str_replace('/index.php', '', $request), '/'); // Elimina '/ind
 // Función para devolver la ruta correspondiente y los datos
 function getRouteData($request) {
     switch ($request) {
-        case '': 
-        case '/': // Ruta principal (página de inicio)
+        case '':
+        case '/':
             return [
-                'template' => 'home.html.twig',
-                'data' => [
-                    'title' => 'Vivero Online',
-                ],
-            ];
+                    'controller' => 'HomeController',
+                    'method' => 'home',
+                    'params' => [],
+                    ]; 
 
         case '/users': // Página de usuarios
             return [
@@ -81,11 +84,10 @@ function getRouteData($request) {
 
         case '/register': // Página de registro
             return [
-                    'template' => 'register.html.twig',
-                    'data' => [
-                        'title' => 'Registro de Usuario',
-                   
-                    ],
+                'template' => 'register.html.twig',
+                'data' => [
+                    'title' => 'Registro de Usuario',
+                ],
             ];
 
         case '/carrito': // Página del carrito
@@ -93,11 +95,40 @@ function getRouteData($request) {
                 'template' => 'carrito.html.twig',
                 'data' => [
                     'title' => 'Carrito de Compras',
-                    'total' => '€0,00', // Inicialmente vacío
+                    'total' => '€0,00',
                 ],
             ];
+    }
 
-        default: // Ruta no encontrada
-            return null; // Devuelve null si no coincide con ninguna ruta
+    // Nueva ruta dinámica para categorías
+    if (preg_match('/^\/categoria\/(\d+)$/', $request, $matches)) {
+        return [
+            'controller' => 'HomeController',
+            'method' => 'mostrarCategoria',
+            'params' => [$matches[1]],
+        ];
+    }
+
+    return null; // Si no se encuentra la ruta
+}
+
+// Obtener la información de la ruta
+$routeData = getRouteData($request);
+
+if ($routeData) {
+    if (isset($routeData['template'])) {
+        // Cargar la vista correspondiente
+        echo "Cargar plantilla: " . $routeData['template'];
+        // Aquí deberías integrar Twig para renderizar la vista con los datos de $routeData['data']
+    } elseif (isset($routeData['controller'])) {
+        require_once __DIR__ . "/../src/controller/{$routeData['controller']}.php";
+        $controllerClass = "\\controller\\" . $routeData['controller'];
+        $controller = new $controllerClass();
+        call_user_func_array([$controller, $routeData['method']], $routeData['params']);
+        exit;
     }
 }
+
+// Si no hay coincidencias, mostrar error 404
+http_response_code(404);
+echo "Error 404: Página no encontrada.";

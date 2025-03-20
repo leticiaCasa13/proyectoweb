@@ -47,36 +47,45 @@
             </div>
         </div>
     </nav>
-
-    
-
 </header>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        let email = localStorage.getItem("email");
+        let userEmail = document.getElementById("userEmail");
+        let logoutContainer = document.getElementById("logoutContainer");
+        let loginLink = document.getElementById("loginLink");
+        let registerLink = document.getElementById("registerLink");
+        let logoutBtn = document.getElementById("logoutBtn");
 
-        if (email) {
-            document.getElementById("userEmail").innerText = "Hola, " + email;
-            document.getElementById("logoutContainer").style.display = "inline-block"; // Muestra el botón de logout
-            
-            // Ocultar "Ingresar" y "Registro" si el usuario está logueado
-            document.getElementById("loginLink").style.display = "none";
-            document.getElementById("registerLink").style.display = "none";
+        function actualizarEstadoUsuario() {
+            let email = localStorage.getItem("email");
+
+            if (email) {
+                userEmail.innerText = "Hola, " + email;
+                logoutContainer.classList.remove("d-none"); // Mostrar el contenedor con el botón de logout
+                logoutContainer.style.display = "flex"; // Asegura que se vea bien
+                loginLink.style.display = "none"; // Ocultar los enlaces de Ingresar y Registro
+                registerLink.style.display = "none";
+            } else {
+                userEmail.innerText = ""; // Limpiar el texto de email
+                logoutContainer.classList.add("d-none"); // Ocultar el contenedor de Logout
+                loginLink.style.display = "inline-block"; // Mostrar los enlaces de Ingresar y Registro
+                registerLink.style.display = "inline-block";
+            }
         }
 
-        document.getElementById("logoutBtn").addEventListener("click", function() {
-            localStorage.removeItem("email");
-            localStorage.removeItem("token");
-            document.getElementById("logoutContainer").style.display = "none"; // Ocultar el contenedor de logout
-            window.location.href = "/login"; // Redirigir al login
+        // Llamar a la función para actualizar el estado del usuario al cargar la página
+        actualizarEstadoUsuario();
+
+        // Evento para el botón de logout
+        logoutBtn.addEventListener("click", function() {
+        localStorage.removeItem("email"); // Eliminar el email del localStorage
+        localStorage.removeItem("token"); // Eliminar el token si existe
+
+
+
+            // Actualizar la interfaz de usuario sin necesidad de recargar la página
+            actualizarEstadoUsuario();
         });
     });
 </script>
-
-
-
-
-
-  
-

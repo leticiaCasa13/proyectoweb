@@ -54,7 +54,7 @@ header .d-flex a:hover {
 }
 
 .page-title {
-    font-family: 'Arial', sans-serif; /* Fuente personalizada */
+    font-family: 'Great Vibes', sans-serif; /* Fuente personalizada */
     color: #4CAF50;                   /* Color verde */
     font-size: 2.5rem;                /* Tamaño de fuente */
     text-align: center;               /* Centrado */
@@ -159,6 +159,11 @@ header .d-flex a:hover {
     background-color: #4cae4c;
 }
 
+section.mt-5 {
+    margin-bottom: 50px;
+}
+
+
 /* Estilos del footer */
 .footer {
     position: relative; /* Permite que el footer respete el flujo natural de la página */
@@ -181,9 +186,10 @@ header .d-flex a:hover {
 
 main {
     background-color: #ffffff;
-    overflow: hidden; /* Evita que el contenido desborde */
-    padding-bottom: 100px; /* Espaciado inferior */
+    padding-bottom: 100px; 
+   
 }
+
 
 main.container {
     width: 100%; /* Asegura que ocupe todo el ancho disponible */

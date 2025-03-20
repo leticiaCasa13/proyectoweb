@@ -15,24 +15,58 @@
     {% include 'layouts/header.html.twig' %} <!-- Incluye el menú de navegación -->
 
     <main class="container my-5">
+        <h1 class="text-start text-dark mb-5">Quiénes Somos</h1>
         <div class="row">
             <!-- Columna para la imagen -->
             <div class="col-md-6">
-                <img src="{{ asset('path/to/your/image.jpg') }}" alt="Imagen de Quiénes Somos" class="img-fluid rounded">
+                <img src="{{ asset('assets/images/vivero.jpg') }}" alt="Imagen de Quiénes Somos" class="img-fluid rounded">
+
             </div>
 
             <!-- Columna para la descripción -->
             <div class="col-md-6">
                 <h1 class="display-4 text-primary"></h1>
                 <p>
-                    Bienvenidos a nuestro sitio. Somos un equipo apasionado por la naturaleza y el bienestar, comprometidos en ofrecer los mejores productos y servicios relacionados con las plantas medicinales. Nuestra misión es promover un estilo de vida saludable a través de soluciones naturales.
+                    Germina Luz es un espacio dedicado a promover el bienestar y el equilibrio del medio ambiente. A lo largo del tiempo, hemos trabajado con compromiso y responsabilidad para aportar nuestro granito
+                    de arena para la naturaleza, enfocándonos en el cultivo de plantas medicinales, plantación de árboles y plantas de diversas especies. Nuestra iniciativa busca crear zonas verdes y abundantes, 
+                    tan esenciales para la salud del planeta y el bienestar de todos los seres vivos.
+                    Hoy, damos un paso más con el lanzamiento de nuestro vivero online: un espacio accesible para todos, con precios justos, para que te animes a llevar un pedacito de naturaleza a tu hogar sin dudarlo.
                 </p>
                 <p>
-                    Con años de experiencia, estamos aquí para brindarte información útil y productos de calidad para que puedas aprovechar al máximo lo que la naturaleza tiene para ofrecer.
+                    Nuestro propósito va más allá de ser solo una tienda de plantas. Queremos expandir ideas, crear proyectos, ofrecer talleres y cursos, y brindar apoyo a todas aquellas iniciativas que compartan el deseo de cuidar 
+                    y proteger nuestro planeta.
                 </p>
             </div>
         </div>
-    </main>
+
+
+     
+
+
+
+   <!-- Galería de fotos -->
+<section class="mt-5">
+   <h2 class="text-start text-secondary mb-4">Nuestra Galería</h2>
+   <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      <div class="col">
+         <img src="{{ asset('assets/images/jardin.jpg') }}" alt="Galería 1" class="img-fluid rounded shadow">
+      </div>
+      <div class="col">
+         <img src="{{ asset('assets/images/jardin2.jpg') }}" alt="Galería 2" class="img-fluid rounded shadow">
+      </div>
+      <div class="col">
+         <img src="{{ asset('assets/images/hortensia.jpg') }}" alt="Galería 3" class="img-fluid rounded shadow">
+      </div>
+      <div class="col">
+         <img src="{{ asset('assets/images/rosas.jpg') }}" alt="Galería 4" class="img-fluid rounded shadow">
+      </div>
+   </div>
+</section> <!-- Cierre correcto -->
+
+
+
+
+</main>
 
     {% include 'layouts/footer.html.twig' %} <!-- Incluye el pie de página -->
 
