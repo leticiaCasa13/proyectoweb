@@ -18,9 +18,14 @@
         
         <div class="row">
              {% for planta in plantas %}
-                <div class="col-md-4 mb-4">
-                 <div class="card">
-                    <img src="{{ asset('assets/images/' ~ planta.imagen) }}" class="card-img-top" alt="{{ planta.nombre }}">
+                <div class="col-md-3 mb-4">
+                 <div class="card" style="max-width: 270px; margin: auto;">
+
+                    <figure class="centrar_img">
+                       <img src="{{ asset('assets/images/' ~ planta.imagen) }}" class="card-img-top" alt="{{ planta.nombre }}"
+                          style="width: 270px; height: 330px; object-fit: cover;">
+                    </figure>
+                    
                   <div class="card-body">
                    <h5 class="card-title">{{ planta.nombre  }}</h5>
                    <p class="card-text">{{ planta.description  }}</p>

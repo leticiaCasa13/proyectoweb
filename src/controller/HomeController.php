@@ -55,32 +55,64 @@ class HomeController
     public function getCategorias()
     {
         try {
-            $stmt = $this->db->query("SELECT * FROM categorias");
+            $stmt = $this->db->query("
+                SELECT id, nombre 
+                FROM categorias 
+                ORDER BY FIELD(nombre, 'PLANTAS ANUALES', 'PLANTAS PERENNES', 'ARBUSTOS', 'ÁRBOLES', 'DE INTERIOR')
+            ");
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
-
         } catch (PDOException $e) {
-        
             return [];
         }
     }
 
     public function mostrarCategoria($id)
-    {
-        $sql = "SELECT * FROM plantas WHERE categoria_id = ?";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([$id]);
-        $plantas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+   {
+    // Obtener el nombre de la categoría
+    $sql_categoria = "SELECT nombre FROM categorias WHERE id = ?";
+    $stmt_categoria = $this->db->prepare($sql_categoria);
+    $stmt_categoria->execute([$id]);
+    $categoria = $stmt_categoria->fetch(PDO::FETCH_ASSOC);
 
-        echo "<h3>🔍 Datos enviados a Twig:</h3>";
-        echo "<pre>";
-        var_dump($plantas);
-        echo "</pre>";
-
-        // Renderizar la plantilla con Twig
-        echo $this->twig->render('categoria.html.twig', [
-            'title' => 'Categoría',
-            'categoria' => ['id' => $id],
-            'plantas' => $plantas
-        ]);
+    // Si no se encuentra la categoría, puedes manejarlo con un error o un valor por defecto
+    if (!$categoria) {
+        // Maneja el error o asigna un valor por defecto
+        $categoria['nombre'] = 'Categoría no encontrada';
     }
+
+    // Obtener las plantas de esa categoría
+    $sql_plantas = "
+        SELECT 
+            p.id, 
+            p.nombre, 
+            p.descripcion, 
+            p.precio, 
+            COALESCE(i.imagen_url, 'https://via.placeholder.com/150') AS imagen_url
+        FROM plantas p
+        LEFT JOIN imagenes i ON p.id = i.planta_id
+        WHERE p.categoria_id = ?
+    ";
+
+    $stmt_plantas = $this->db->prepare($sql_plantas);
+    $stmt_plantas->execute([$id]);
+    $plantas = $stmt_plantas->fetchAll(PDO::FETCH_ASSOC);
+
+
+     // Convertir el nombre de la categoría a formato "Plantas Anuales"
+     $categoria['nombre'] = ucwords(strtolower($categoria['nombre']));
+
+
+     // Renderizar la plantilla con Twig 
+    echo $this->twig->render('categoria.html.twig', [
+        'title' => $categoria['nombre'], // Título de la categoría
+        'categoria' => $categoria, // Datos de la categoría
+        'plantas' => $plantas // Datos de las plantas 
+    ]);
+    
+   }
+
 }
+
+
+
+

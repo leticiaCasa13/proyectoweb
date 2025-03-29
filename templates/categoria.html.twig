@@ -1,1 +1,53 @@
 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ categoria.nombre }}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    {% include 'layouts/header.html.twig' %} {# Incluye el menú principal #}
+
+    <main class="container my-5">
+    <div class="categoria-titulo">
+      <h1 class="fw-normal text-start">{{ categoria.nombre }}</h1>
+    
+      <p class ="text-center">{{ planta.descripcion }}</p>
+    </div>
+        <div class="row">
+    {% for planta in plantas %}
+        <div class="col-md-3 mb-4">
+            <div class="card"style="max-width: 270px; margin: auto;">
+                
+                <!-- Estructura de figure basada en la página original -->
+                <figure class="centrar_img">
+                    <a href="{{ planta.enlace }}" title="{{ planta.nombre }}">
+                        <img src="{{ planta.imagen_url }}" class="img-fluid" alt="{{ planta.nombre }}" 
+                             style="width: 270px; height: 330px; object-fit: cover;">
+                    </a>
+                </figure>
+
+                <div class="card-body">
+                    <h5 class="card-title">{{ planta.nombre }}</h5>
+                    <p class="card-text">{{ planta.descripcion }}</p>
+                    <p class="card-text"><strong>Precio:</strong> ${{ planta.precio }}</p>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+       
+    </main>
+
+    {% include 'layouts/footer.html.twig' %} {# Incluye el pie de página #}
+</body>
+</html>
+
+
+       

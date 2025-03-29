@@ -115,7 +115,24 @@ header .d-flex a:hover {
     top: 50px; /* Baja el menú 50px hacia abajo */
 }
 
-/* Estilos del formulario */
+.col-md-4 {
+    padding-left: 5px;    /*entre imagen e imagen*/
+    padding-right: 5px;
+}
+
+.menu-secundario a {
+    background-color: #5e9760 !important; /* Verde más claro */
+    color: white !important;
+    transition: background-color 0.3s ease; /* Para suavizar la transición de color */
+}
+
+.menu-secundario a:hover {
+    background-color: #81c784 !important; /* Verde más claro cuando se pasa el cursor */
+    color: white !important; /* Mantener el color del texto en blanco */
+}
+
+
+/* Estilos del formulario */ 
 .form-container {
     max-width: 400px;
     margin: 0 auto;
