@@ -1,3 +1,4 @@
+
 <?php
 
 // ACTIVAR ERRORES
@@ -29,15 +30,15 @@ function getRouteData($request) {
                     'title' => 'Usuarios',
                 ],
             ];
-
-        case '/contacto': // Página de contacto
+        
+        case '/contact':
             return [
-                'template' => 'contact.html.twig',
-                'data' => [
-                    'title' => 'Contacto',
-                    'description' => 'Contáctanos para más información sobre nuestros servicios.',
-                ],
+                'controller' => 'ContactController',
+                'method' => 'index',
+                'params' => [],
             ];
+    
+            
 
         case '/plantas': // Lista de plantas medicinales
             return [
@@ -98,7 +99,12 @@ function getRouteData($request) {
                     'total' => '€0,00',
                 ],
             ];
+ 
+
+               
     }
+
+  
 
     // Nueva ruta dinámica para categorías
     if (preg_match('/^\/categoria\/(\d+)$/', $request, $matches)) {
@@ -115,11 +121,18 @@ function getRouteData($request) {
 // Obtener la información de la ruta
 $routeData = getRouteData($request);
 
+
 if ($routeData) {
     if (isset($routeData['template'])) {
-        // Cargar la vista correspondiente
-        echo "Cargar plantilla: " . $routeData['template'];
-        // Aquí deberías integrar Twig para renderizar la vista con los datos de $routeData['data']
+        // Cargar Twig
+        require_once __DIR__ . '/../vendor/autoload.php';
+        $loader = new \Twig\Loader\FilesystemLoader(__DIR__ . '/../templates');
+        $twig = new \Twig\Environment($loader);
+
+        // Renderizar la plantilla con los datos
+        echo $twig->render($routeData['template'], $routeData['data'] ?? []);
+        exit;
+
     } elseif (isset($routeData['controller'])) {
         require_once __DIR__ . "/../src/controller/{$routeData['controller']}.php";
         $controllerClass = "\\controller\\" . $routeData['controller'];
@@ -129,6 +142,5 @@ if ($routeData) {
     }
 }
 
-// Si no hay coincidencias, mostrar error 404
-http_response_code(404);
-echo "Error 404: Página no encontrada.";
+
+

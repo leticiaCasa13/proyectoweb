@@ -1,46 +1,70 @@
-// src/Controller/ContactController.php
+<?php
 
-namespace App\Controller;
+namespace controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\Annotation\Route;
-
-class ContactController extends AbstractController
+class ContactController
 {
-    /**
-     * @Route("/contact", name="contact")
-     */
-    public function index(Request $request)
+    public function index()
     {
-        // Comprobar si se envió el formulario
-        if ($request->isMethod('POST')) {
-            $name = $request->get('name');
-            $email = $request->get('email');
-            $message = $request->get('message');
+        session_start(); // Iniciar sesión al principio
 
-            // Verificar si todos los campos fueron llenados
-            if ($name && $email && $message) {
-                // Aquí podrías agregar la lógica para enviar el mensaje a un correo o guardarlo
+        // Si es POST: procesar formulario
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $name = $_POST['name'] ?? '';
+            $email = $_POST['email'] ?? '';
+            $message = $_POST['message'] ?? '';
 
-                // Guardar el mensaje de éxito en la sesión
-                $this->addFlash('message', '¡Tu mensaje ha sido enviado con éxito!');
-
-                // Redirigir a la misma página con el mensaje de éxito
-                return $this->redirectToRoute('contact');
+            if (!empty($name) && !empty($email) && !empty($message)) {
+                // validar que el nombre solo contenga letras y espacios
+                if (!preg_match("/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u", $name)) {
+                    $_SESSION['flash_error'] = 'El nombre solo puede contener letras y espacios.';
+                    $_SESSION['form_data'] = $_POST;
+                }
+            
+                //validar email con el filtro php
+                elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    $_SESSION['flash_error'] = 'El correo electrónico no es válido.';
+                    $_SESSION['form_data'] = $_POST;
+                }
+                // validar que el mensaje tenga 10 caracteres
+                elseif (strlen($message) < 10) {
+                    $_SESSION['flash_error'] = 'El mensaje debe tener al menos 10 caracteres.';
+                    $_SESSION['form_data'] = $_POST;
+                }
+                //si todo está bien:
+                
+                else {
+                    $_SESSION['flash_message'] = '¡Tu mensaje ha sido enviado con éxito! En breve recibirás respuesta. ¡Gracias por contactarnos!';
+                    unset($_SESSION['form_data']);
+                }
+        
             } else {
-                // Guardar el mensaje de error en la sesión
-                $this->addFlash('error', '¡Oops! Todos los campos son obligatorios.');
-
-                // Redirigir a la misma página con el mensaje de error
-                return $this->redirectToRoute('contact');
+                // ❌ Error: campos vacíos
+                $_SESSION['flash_error'] = '¡Oops! Todos los campos son obligatorios.';
+                $_SESSION['form_data'] = $_POST; // Guardar datos para rellenar el formulario
             }
+
+            // Redirigir para evitar reenviar el formulario al recargar
+            header('Location: /contact');
+            exit;
         }
 
-        // Si no se envió el formulario, mostrar la página de contacto
-        return $this->render('contact.html.twig', [
-            'description' => 'Déjanos tu mensaje, ¡estaremos encantados de responderte!',
-        ]);
+        // Si es GET: mostrar formulario
+        $loader = new \Twig\Loader\FilesystemLoader(__DIR__ . '/../../templates');
+        $twig = new \Twig\Environment($loader);
+
+        // Preparar datos para la vista
+        $data = [
+            'flash_message' => $_SESSION['flash_message'] ?? null,
+            'flash_error' => $_SESSION['flash_error'] ?? null,
+            'form_data' => $_SESSION['form_data'] ?? []
+        ];
+
+        // Limpiar mensajes de sesión después de leerlos
+        unset($_SESSION['flash_message'], $_SESSION['flash_error'], $_SESSION['form_data']);
+
+        // Renderizar plantilla de contacto
+        echo $twig->render('contact.html.twig', $data);
     }
 }
+
