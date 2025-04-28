@@ -1,0 +1,58 @@
+<div id="act_carrito" class="col-12 col-lg-8 columna_1">
+  <div class="cont-pesos">
+    <div class="row">
+      <div class="col-lg-6 col-12">
+        <h4>Artículos en tu carrito</h4>
+      </div>
+      <div class="col-3 text-center">
+        <h4>Cantidad</h4>
+      </div>
+      <div class="col-3 text-center">
+        <h4>Total</h4>
+      </div>
+    </div>
+  
+    <div class="cont-fila_carrito">
+      <div class="row">
+        <div class="col-6 col-lg-6 cont-presentacion">
+          <div class="row">
+            <figure class="col-12 col-lg-5 item">
+              <a href="/detalles-planta/{{ planta.id }}" title="{{ planta.nombre }}">
+                <img src="{{ planta.imagen_url }}" width="270" height="321" alt="{{ planta.nombre }}" class="img-fluid rounded shadow">
+              </a>
+            </figure>
+            <div class="col-lg-7">
+              <a href="/detalles-planta/{{ planta.id }}">{{ planta.nombre }}</a>
+              <h2>{{ planta.id }}</h2>
+              <strong>${{ planta.precio }}</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-6 col-lg-3 texto-centro">
+          <div class="cantidad">
+            <button class="reguladores titulo-sm pointer di" value="-" onclick="decrementarCantidad()"></button>
+            <input name="cantidad" type="text" class="carrito_cantidad text-center" value="1">
+            <button class="reguladores titulo-sm pointer di" value="+" onclick="incrementarCantidad()"></button>
+          </div>
+        </div>
+
+        <div class="col-12 col-lg-3 cont-total texto-centro">
+          <h3>
+            <strong>${{ planta.precio }}</strong>
+            <a href="javascript:eliminarItem('{{ planta.id }}');" class="eliminar">
+              <span class="icono-trash"></span>
+            </a>
+          </h3>
+        </div>
+      </div>
+    </div>
+
+    <label for="actualizar" class="pointer">
+      <span class="icono-actualizar"></span>
+      <p>Actualizar Carrito</p>
+    </label>  
+  </div>
+</div>
+
+

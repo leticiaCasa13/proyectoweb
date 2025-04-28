@@ -12,30 +12,28 @@
 <body>
     {% include 'layouts/header.html.twig' %} {# Incluye el menú principal #}
 
+   
+
     <main class="container my-5">
-        <h1>{{ title }}</h1>
-        <p>{{ description }}</p>
+        <h1 class="titulo-principal text-secondary mb-5">{{ title }}</h1>
         
-        <div class="row">
-             {% for planta in plantas %}
-                <div class="col-md-3 mb-4">
-                 <div class="card" style="max-width: 270px; margin: auto;">
+        <p>{{ description }}</p>
 
-                    <figure class="centrar_img">
-                       <img src="/assets/images/{{ planta.imagen }}" class="card-img-top" alt="{{ planta.nombre }}"
-                              style="width: 270px; height: 330px; object-fit: cover;">
-
-                    </figure>
-                    
-                  <div class="card-body">
-                   <h5 class="card-title">{{ planta.nombre  }}</h5>
-                   <p class="card-text">{{ planta.description  }}</p>
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+          {% for planta in plantas %}
+              <div class="col">
+                  <div class="card h-100 text-center">
+                      <img src="/assets/images/{{ planta.imagen }}" class="card-img-top" alt="{{ planta.nombre }}" style="height: 250px; object-fit: cover;">
+                      <div class="card-body">
+                        <h5 class="card-title">{{ planta.nombre }}</h5>
+                        <p class="card-text">{{ planta.description }}</p>
+                      </div>
                   </div>
-                 </div> 
-                </div>
-            {% endfor %}
-        </div>
-    </main>
+              </div>
+         {% endfor %}
+     </div>
+  </main>
+
 
     {% include 'layouts/footer.html.twig' %} {# Incluye el pie de página #}
 </body>

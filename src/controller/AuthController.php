@@ -36,7 +36,8 @@ class AuthController {
         if (!$user) {
             return [
                 'status' => 'error',
-                'message' => 'Usuario no encontrado'
+                'message' => _("Usuario no encontrado")   
+
             ];
         }
 

@@ -61,6 +61,59 @@ header .d-flex a:hover {
     font-weight: bold;                /* Negrita */
 }
 
+.titulo-principal {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    font-weight: bold;
+    color: #264d00;
+}
+
+.categoria-titulo h1 {
+    font-family: Arial, Helvetica, sans-serif !important;
+    color: #2e8b57; /* verde suave, podés ajustarlo a tu gusto */
+}
+
+
+
+
+.cont-producto_ampliado {
+    padding: 2rem;
+}
+  
+  main.container {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 15px;
+  }
+  
+.cont-presentacion {
+    align-items: flex-start;
+  }
+  
+  /* Imagen bien proporcionada carrito*/
+.cont-presentacion img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+  
+  /* Estética */
+h1 {
+    margin-bottom: 10px;
+  }
+  
+.precio {
+    margin-bottom: 10px;
+}
+  
+/* En pantallas pequeñas, un poco de separación */
+@media (max-width: 768px) {
+.cont-presentacion {
+      row-gap: 2rem;
+    }
+}
+  
 
 #userEmail {
     color: #fff; /* Texto en blanco */

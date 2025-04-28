@@ -1,12 +1,17 @@
-
 <?php
 
 // ACTIVAR ERRORES
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Directorio donde están tus vistas (plantillas o archivos Twig)
-$viewDir = __DIR__ . '/../templates/';
+// ✅ Cargar configuración de base de datos
+require_once __DIR__ . '/../public/api/config/database.php';
+$config = require __DIR__ . '/../public/api/config/database.php';
+
+// Iniciar Twig
+require_once __DIR__ . '/../vendor/autoload.php';
+$loader = new \Twig\Loader\FilesystemLoader(__DIR__ . '/../templates');
+$twig = new \Twig\Environment($loader);
 
 // Obtener la solicitud actual y normalizarla
 $request = strtok($_SERVER['REQUEST_URI'], '?'); // Divide la solicitud en ruta y parámetros
@@ -18,29 +23,33 @@ function getRouteData($request) {
         case '':
         case '/':
             return [
-                    'controller' => 'HomeController',
-                    'method' => 'home',
-                    'params' => [],
-                    ]; 
+                'controller' => 'HomeController',
+                'method' => 'home',
+                'params' => [],
+            ];
 
-        case '/users': // Página de usuarios
+        case '/users':
             return [
                 'template' => 'Users.html.twig',
                 'data' => [
                     'title' => 'Usuarios',
                 ],
             ];
-        
+
+
         case '/contact':
             return [
                 'controller' => 'ContactController',
                 'method' => 'index',
                 'params' => [],
-            ];
-    
+                'data' => [
+                'title' => 'Contacto',
+                'description' => 'Contacta con nosotros'
+                    ]
+                ];
             
 
-        case '/plantas': // Lista de plantas medicinales
+        case '/plantas':
             return [
                 'template' => 'plantas.html.twig',
                 'data' => [
@@ -66,7 +75,7 @@ function getRouteData($request) {
                 ],
             ];
 
-        case '/quienes_somos': // Quiénes somos
+        case '/quienes_somos':
             return [
                 'template' => 'QuienesSomos.html.twig',
                 'data' => [
@@ -75,7 +84,7 @@ function getRouteData($request) {
                 ],
             ];
 
-        case '/login': // Página de login
+        case '/login':
             return [
                 'template' => 'login.html.twig',
                 'data' => [
@@ -83,7 +92,7 @@ function getRouteData($request) {
                 ],
             ];
 
-        case '/register': // Página de registro
+        case '/register':
             return [
                 'template' => 'register.html.twig',
                 'data' => [
@@ -91,7 +100,7 @@ function getRouteData($request) {
                 ],
             ];
 
-        case '/carrito': // Página del carrito
+        case '/carrito':
             return [
                 'template' => 'carrito.html.twig',
                 'data' => [
@@ -99,14 +108,19 @@ function getRouteData($request) {
                     'total' => '€0,00',
                 ],
             ];
- 
+            
+            
 
-               
+        case '/planta-carrito':
+            return [
+                'template' => 'plantaCarrito.html.twig',
+                'data' => [
+                    'title' => 'Detalle de Planta',
+                ],
+            ];
     }
 
-  
-
-    // Nueva ruta dinámica para categorías
+    // Ruta dinámica para categoría
     if (preg_match('/^\/categoria\/(\d+)$/', $request, $matches)) {
         return [
             'controller' => 'HomeController',
@@ -115,32 +129,31 @@ function getRouteData($request) {
         ];
     }
 
-    return null; // Si no se encuentra la ruta
+    // Ruta dinámica para planta
+    if (preg_match('/^\/planta\/(\d+)$/', $request, $matches)) {
+        return [
+            'controller' => 'PlantController',
+            'method' => 'show',
+            'params' => [$matches[1]],
+        ];
+    }
+
+    return null;
 }
 
 // Obtener la información de la ruta
 $routeData = getRouteData($request);
 
-
 if ($routeData) {
     if (isset($routeData['template'])) {
-        // Cargar Twig
-        require_once __DIR__ . '/../vendor/autoload.php';
-        $loader = new \Twig\Loader\FilesystemLoader(__DIR__ . '/../templates');
-        $twig = new \Twig\Environment($loader);
-
-        // Renderizar la plantilla con los datos
         echo $twig->render($routeData['template'], $routeData['data'] ?? []);
         exit;
 
     } elseif (isset($routeData['controller'])) {
-        require_once __DIR__ . "/../src/controller/{$routeData['controller']}.php";
+        require_once __DIR__ . "/controller/{$routeData['controller']}.php";
         $controllerClass = "\\controller\\" . $routeData['controller'];
-        $controller = new $controllerClass();
+        $controller = new $controllerClass($twig, $config); // ✅ Pasamos $twig al constructor
         call_user_func_array([$controller, $routeData['method']], $routeData['params']);
         exit;
     }
 }
-
-
-

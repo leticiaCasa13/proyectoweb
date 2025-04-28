@@ -1,10 +1,17 @@
 <?php
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 $config = require __DIR__ . '/api/config/database.php';
 
 require_once __DIR__ . '/../src/controller/AuthController.php';
+require_once __DIR__ . '/i18n/lang.php'; // Asegúrate de que la ruta sea correcta
+
+aplicarIdioma(); // Cambia el idioma con setlocale()
 
 use controller\AuthController;
 
@@ -20,7 +27,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['REQUEST_URI'] === '/api/l
     exit;
 }
 
-
 // Mensaje de conexión
 echo "¡Conexión establecida!<br>";
 
@@ -30,9 +36,14 @@ $twig = new \Twig\Environment($loader, [
     'cache' => false, // Cambia a true si necesitas caché en producción
 ]);
 
+// Agregar un filtro de traducción para Twig q se encarga de llamar a gettext
+//$twig->addFilter(new \Twig\TwigFilter('trans', function ($string) {
+    // Usamos gettext para traducir
+    //return gettext($string);
+//}));
+
 // Función para generar URLs de recursos estáticos
 $twig->addFunction(new \Twig\TwigFunction('asset', function ($path) {
-    // Devuelve la ruta relativa desde la carpeta public
     return '/' . ltrim($path, '/');  // Esto asegura que la ruta sea relativa a la carpeta public
 }));
 
@@ -51,4 +62,5 @@ if ($routeData) {
         'title' => 'Página no encontrada',
     ]);
 }
+
 

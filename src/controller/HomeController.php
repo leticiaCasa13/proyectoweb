@@ -77,7 +77,7 @@ class HomeController
     // Si no se encuentra la categoría, puedes manejarlo con un error o un valor por defecto
     if (!$categoria) {
         // Maneja el error o asigna un valor por defecto
-        $categoria['nombre'] = 'Categoría no encontrada';
+        $categoria['nombre'] = _("Categoría no encontrada");
     }
 
     // Obtener las plantas de esa categoría

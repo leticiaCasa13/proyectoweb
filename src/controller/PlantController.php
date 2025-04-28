@@ -1,20 +1,42 @@
-public function getPlantsByCategory($categoryName) {
-    $sql = "SELECT 
-                p.id, p.nombre, p.descripcion, p.precio, p.imagen_url, 
-                c.nombre AS categoria,
-                (SELECT GROUP_CONCAT(im.imagen_url) FROM imagenes im WHERE im.planta_id = p.id) AS imagenes
-            FROM plantas p
-            JOIN categorias c ON p.categoria_id = c.id
-            WHERE c.nombre = ?";
-    
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute([$categoryName]);
-    $plants = $stmt->fetchAll(PDO::FETCH_ASSOC);
+<?php
 
-    // Convertir la cadena de imágenes en un array
-    foreach ($plants as &$plant) {
-        $plant['imagenes'] = $plant['imagenes'] ? explode(',', $plant['imagenes']) : [];
+namespace controller;
+
+use src\Database;
+use PDO;
+
+require_once __DIR__ . '/../Database.php'; // Ruta a tu clase Database
+
+
+class PlantController
+{
+    private $twig;
+    private $config;
+
+    public function __construct($twig, $config)
+    {
+        $this->twig = $twig;
+        $this->config = $config;
     }
 
-    return $plants;
+    public function show($id)
+    {
+        // Obtener la conexión PDO
+        $db = Database::getInstance($this->config)->getConnection();
+
+        // Consultar planta por ID
+        $stmt = $db->prepare("SELECT * FROM plantas WHERE id = ?");
+        $stmt->execute([$id]);
+        $planta = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$planta) {
+            http_response_code(404);
+            echo "Planta no encontrada.";
+            return;
+        }
+
+        echo $this->twig->render('plantaCarrito.html.twig', [
+            'planta' => $planta
+        ]);
+    }
 }
