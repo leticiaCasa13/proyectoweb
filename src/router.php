@@ -8,6 +8,10 @@ ini_set('display_errors', 1);
 require_once __DIR__ . '/../public/api/config/database.php';
 $config = require __DIR__ . '/../public/api/config/database.php';
 
+require_once __DIR__ . '/../src/controller/CartController.php';
+
+
+
 // Iniciar Twig
 require_once __DIR__ . '/../vendor/autoload.php';
 $loader = new \Twig\Loader\FilesystemLoader(__DIR__ . '/../templates');
@@ -16,6 +20,7 @@ $twig = new \Twig\Environment($loader);
 // Obtener la solicitud actual y normalizarla
 $request = strtok($_SERVER['REQUEST_URI'], '?'); // Divide la solicitud en ruta y parámetros
 $request = rtrim(str_replace('/index.php', '', $request), '/'); // Elimina '/index.php' y barras finales
+
 
 // Función para devolver la ruta correspondiente y los datos
 function getRouteData($request) {
@@ -39,6 +44,7 @@ function getRouteData($request) {
 
         case '/contact':
             return [
+                
                 'controller' => 'ContactController',
                 'method' => 'index',
                 'params' => [],
@@ -102,13 +108,44 @@ function getRouteData($request) {
 
         case '/carrito':
             return [
-                'template' => 'carrito.html.twig',
-                'data' => [
-                    'title' => 'Carrito de Compras',
-                    'total' => '€0,00',
-                ],
+                'controller' => 'CartController',
+                'method' => 'mostrarCarrito',
+                'params' => [],
             ];
-            
+
+        case '/checkout':
+            return [
+                'controller' => 'CartController',
+                'method' => 'verCheckout',
+                'params' => [],
+                ];
+
+         
+         case '/grafico-categorias':
+            return [
+                    'controller' => 'GraficoController',
+                    'method' => 'mostrarGrafico',
+                    'params' => [],
+                ];
+                
+
+        case '/chart-data':
+            return [
+                    'controller' => 'ChartDataController',
+                    'method' => 'getChartData',
+                    'params' => [],
+                ];
+                
+                       
+               
+        case '/finalizar-compra':
+            return [
+                'template' => 'pago.html.twig',
+                'data' => [
+                        'title' => 'Finalizar Compra',
+                    ],
+            ];
+                   
             
 
         case '/planta-carrito':
@@ -118,7 +155,44 @@ function getRouteData($request) {
                     'title' => 'Detalle de Planta',
                 ],
             ];
+
+        case '/carrito/agregar':
+            return [
+                'controller' => 'CartController',
+                'method' => 'agregar',
+                'params' => [],
+            ]; 
+            
+            
+        case '/planta':      //permite acceder a una planta individual(carrito)
+            if (isset($_GET['id'])) {
+            return [
+                'controller' => 'CartController',
+                'method' => 'verPlanta',
+                'params' => [$_GET['id']],
+                ];
+            }
+            break;
+
+
+        case '/buscar':
+            return [
+                    'controller' => 'HomeController',
+                    'method' => 'buscarPlantas',
+                    'params' => [],
+            ];
+
+        case '/procesar-pago':
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                echo $twig->render('confirmacion.html.twig');
+                exit;
+            }
+            break;
+               
+                
     }
+
+
 
     // Ruta dinámica para categoría
     if (preg_match('/^\/categoria\/(\d+)$/', $request, $matches)) {
@@ -138,8 +212,12 @@ function getRouteData($request) {
         ];
     }
 
+
+
     return null;
 }
+
+
 
 // Obtener la información de la ruta
 $routeData = getRouteData($request);
@@ -157,3 +235,9 @@ if ($routeData) {
         exit;
     }
 }
+// Si no se encuentra la ruta
+http_response_code(404);
+echo $twig->render('404.html.twig', ['title' => 'Página no encontrada']);
+
+
+

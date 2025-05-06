@@ -1,57 +1,64 @@
+<!DOCTYPE html>
+ <meta charset="UTF-8">
+<html lang="es">
+<head>
+{# Bootstrap CSS #}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
 
-<header style="background-color: #ccc; padding: 20px 20px;">
-    <nav class="navbar navbar-expand-lg navbar-dark container">
-    
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
 
-        <div class="collapse navbar-collapse justify-content-between" id="navbarMain">
-           <ul class="navbar-nav mb-2 mb-lg-0">
-               <li class="nav-item">
-                 <a class="nav-link text-white custom-hover" href="/">Inicio</a>
-               </li>
-               <li class="nav-item">
-                 <a class="nav-link text-white custom-hover" href="/contact">Contacto</a>
-               </li>
-               <li class="nav-item">
-                 <a class="nav-link text-white custom-hover" href="/plantas">Plantas</a>
-               </li>
-               <li class="nav-item">
-                 <a class="nav-link text-white custom-hover" href="/quienes_somos">Quiénes Somos</a>
-               </li>
-           </ul>
+<header style="background-color: #ccc; padding: 20px 0;">
+  <nav class="navbar navbar-expand-lg navbar-dark container">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain"
+            aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-            <div class="d-flex align-items-center gap-3">
-                <!-- Login -->
-                <div id="loginLink">
-                    <a href="/login" class="text-white text-decoration-none custom-hover">
-                        <i class="bi bi-person-circle"></i> Ingresar
-                    </a>
-                </div>
+    <div class="collapse navbar-collapse justify-content-between" id="navbarMain">
 
-                <!-- Register -->
-                <div id="registerLink">
-                    <a href="/register" class="text-white text-decoration-none custom-hover">
-                        <i class="bi bi-person-plus"></i> Registro
-                    </a>
-                </div>
+      <!-- Menú principal -->
+      <ul class="navbar-nav mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link text-white custom-hover" href="/">Inicio</a></li>
+        <li class="nav-item"><a class="nav-link text-white custom-hover" href="/contact">Contacto</a></li>
+        <li class="nav-item"><a class="nav-link text-white custom-hover" href="/plantas">Plantas</a></li>
+        <li class="nav-item"><a class="nav-link text-white custom-hover" href="/quienes_somos">Quiénes Somos</a></li>
+      </ul>
 
-                <!-- Carrito -->
-                <div>
-                    <a href="/carrito" class="text-white text-decoration-none custom-hover">
-                        <i class="bi bi-cart3"></i> €0,00
-                    </a>
-                </div>
+      <!-- Área derecha -->
+      <div class="d-flex align-items-center gap-3">
 
-                <!-- Usuario Logueado -->
-                <div id="logoutContainer" class="d-flex align-items-center gap-2 d-none">
-                    <span id="userEmail" class="text-white mb-0"></span>
-                    <button id="logoutBtn" class="btn btn-success mt-3">Cerrar Sesión</button>
-                </div>
-            </div>
+        <!-- Login y Registro -->
+        <div class="d-flex align-items-center gap-2">
+          <div id="loginLink">
+            <a href="/login" class="text-white text-decoration-none custom-hover">
+              <i class="bi bi-person-circle"></i> Ingresar
+            </a>
+          </div>
+
+          <div id="registerLink">
+            <a href="/register" class="text-white text-decoration-none custom-hover">
+              <i class="bi bi-person-plus"></i> Registro
+            </a>
+          </div>
+
+          <!-- Usuario Logueado -->
+          <div id="logoutContainer" class="d-flex align-items-center gap-2 d-none">
+            <span id="userEmail" class="text-white mb-0"></span>
+            <button id="logoutBtn" class="btn btn-success btn-sm">Cerrar Sesión</button>
+          </div>
         </div>
-    </nav>
+
+        <!-- Formulario de búsqueda pequeño -->
+        <form action="/buscar" method="GET" class="d-flex align-items-center" style="max-width: 180px;">
+          <input type="text" name="q" class="form-control form-control-sm me-1" placeholder="Buscar..." aria-label="Buscar">
+          <button class="btn btn-outline-light btn-sm" type="submit">
+            <i class="bi bi-search"></i>
+          </button>
+        </form>
+
+      </div>
+    </div>
+  </nav>
 </header>
 
 <style>
@@ -61,36 +68,39 @@
     }
 </style>
 
+
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        let userEmail = document.getElementById("userEmail");
-        let logoutContainer = document.getElementById("logoutContainer");
-        let loginLink = document.getElementById("loginLink");
-        let registerLink = document.getElementById("registerLink");
-        let logoutBtn = document.getElementById("logoutBtn");
+  document.addEventListener("DOMContentLoaded", function () {
+    let userEmail = document.getElementById("userEmail");
+    let logoutContainer = document.getElementById("logoutContainer");
+    let loginLink = document.getElementById("loginLink");
+    let registerLink = document.getElementById("registerLink");
+    let logoutBtn = document.getElementById("logoutBtn");
 
-        function actualizarEstadoUsuario() {
-            let email = localStorage.getItem("email");
+    function actualizarEstadoUsuario() {
+      let email = localStorage.getItem("email");
 
-            if (email) {
-                userEmail.innerText = "Hola, " + email;
-                logoutContainer.classList.remove("d-none");
-                loginLink.style.display = "none";
-                registerLink.style.display = "none";
-            } else {
-                userEmail.innerText = "";
-                logoutContainer.classList.add("d-none");
-                loginLink.style.display = "inline-block";
-                registerLink.style.display = "inline-block";
-            }
-        }
+      if (email) {
+        userEmail.innerText = "Hola, " + email;
+        logoutContainer.classList.remove("d-none");
+        loginLink.style.display = "none";
+        registerLink.style.display = "none";
+      } else {
+        userEmail.innerText = "";
+        logoutContainer.classList.add("d-none");
+        loginLink.style.display = "inline-block";
+        registerLink.style.display = "inline-block";
+      }
+    }
 
-        actualizarEstadoUsuario();
+    actualizarEstadoUsuario();
 
-        logoutBtn.addEventListener("click", function() {
-            localStorage.removeItem("email");
-            localStorage.removeItem("token");
-            actualizarEstadoUsuario();
-        });
+    logoutBtn.addEventListener("click", function () {
+      localStorage.removeItem("email");
+      localStorage.removeItem("token");
+      actualizarEstadoUsuario();
     });
+  });
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

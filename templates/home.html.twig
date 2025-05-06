@@ -25,7 +25,7 @@
         <img src="/assets/images/logo1.png" alt="Aquí va el logo" style="width:300px; height: auto;">
     </div>
 
-    <!-- ✅ Aquí va el menú de categorías con las que vienen desde la BD -->
+    <!-- Aquí va el menú de categorías con las que vienen desde la BD -->
        {% if categorias is empty %}
     <p>No hay categorías disponibles.</p>
 {% else %}
@@ -41,6 +41,14 @@
         </ul>
     </nav>
 {% endif %}
+
+
+<hr class="my-5">
+<div class="text-center mt-4">
+    <a href="/grafico-categorias" class="btn btn-outline-secondary">
+        📊 Ver estadísticas de categorías
+    </a>
+</div>
 
 
 </main>

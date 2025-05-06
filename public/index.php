@@ -9,7 +9,11 @@ require_once __DIR__ . '/../vendor/autoload.php';
 $config = require __DIR__ . '/api/config/database.php';
 
 require_once __DIR__ . '/../src/controller/AuthController.php';
-require_once __DIR__ . '/i18n/lang.php'; // Asegúrate de que la ruta sea correcta
+require_once __DIR__ . '/i18n/lang.php'; // ???
+
+require_once __DIR__ . '/../src/controller/CartController.php';  // FALTABA ESTA LÍNEA
+use controller\CartController;                                    // FALTABA ESTA LÍNEA
+
 
 aplicarIdioma(); // Cambia el idioma con setlocale()
 
@@ -35,6 +39,16 @@ $loader = new \Twig\Loader\FilesystemLoader(__DIR__ . '/../templates');
 $twig = new \Twig\Environment($loader, [
     'cache' => false, // Cambia a true si necesitas caché en producción
 ]);
+
+// Procesar formulario de pago (POST)
+$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$method = $_SERVER['REQUEST_METHOD'];
+
+if ($uri === '/procesar-pago' && $method === 'POST') {
+    $cartController = new CartController($twig);
+    $cartController->procesarPago();
+    exit;
+}
 
 // Agregar un filtro de traducción para Twig q se encarga de llamar a gettext
 //$twig->addFilter(new \Twig\TwigFilter('trans', function ($string) {

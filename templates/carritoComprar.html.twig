@@ -1,60 +1,91 @@
-{% if carrito is defined %}
-    <div id="act_carrito" class="col-12 col-lg-8 columna_1">
-        <div class="cont-pesos">
-            <div class="row">
-                <div class="col-lg-6 col-12">
-                    <h4>Artículos en tu carrito</h4>
-                </div>
-                <div class="col-3 text-center">
-                    <h4>Cantidad</h4>
-                </div>
-                <div class="col-3 text-center">
-                    <h4>Total</h4>
-                </div>
-            </div>
-        
-            {% for planta in carrito %}
-                <div class="cont-fila_carrito">
-                    <div class="row">
-                        <div class="col-6 col-lg-6 cont-presentacion">
-                            <div class="row">
-                                <figure class="col-12 col-lg-5 item">
-                                    <a href="/planta/{{ planta.id }}" title="{{ planta.nombre }}">
-                                        <img src="{{ planta.imagen_url }}" width="270" height="321" alt="{{ planta.nombre }}" class="img-fluid rounded shadow">
-                                    </a>
-                                </figure>
-                                <div class="col-lg-7">
-                                    <a href="/planta/{{ planta.id }}">{{ planta.nombre }}</a>
-                                    <h2>{{ planta.id }}</h2>
-                                    <strong>${{ planta.precio }}</strong>
-                                </div>
-                            </div>
-                        </div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrito | Germina Luz</title>
 
-                        <div class="col-6 col-lg-3 texto-centro">
-                            <div class="cantidad">
-                                <button class="reguladores titulo-sm pointer di" value="-" onclick="decrementarCantidad()"></button>
-                                <input name="cantidad" type="text" class="carrito_cantidad text-center" value="{{ planta.cantidad }}">
-                                <button class="reguladores titulo-sm pointer di" value="+" onclick="incrementarCantidad()"></button>
-                            </div>
-                        </div>
+  <!-- Estilos y Bootstrap -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
 
-                        <div class="col-12 col-lg-3 cont-total texto-centro">
-                            <h3>
-                                <strong>${{ planta.precio * planta.cantidad }}</strong>
-                                <a href="javascript:eliminarItem('{{ planta.id }}');" class="eliminar">
-                                    <span class="icono-trash"></span>
-                                </a>
-                            </h3>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        
-            <label for="actualizar" class="pointer">
-                <span class="icono-actualizar"></span>
-                <p>Actualizar Carrito</p>
-            </label>  
+{% include 'layouts/header.html.twig' %}
+
+{% if carrito is defined and carrito|length > 0 %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-10">
+
+      <div class="text-secondary mb-5"> 
+        <h4 class="titulo-carrito">Mi carrito</h4>
+        <p>Artículos</p>
+      </div>
+
+      {% for planta in carrito %}
+      <div class="row border-bottom py-3 align-items-center">
+        <div class="col-12 col-lg-6 d-flex">
+          <a href="/planta/{{ planta.id }}" class="me-3">
+            <img src="{{ planta.imagen_url }}" width="100" height="100" alt="{{ planta.nombre }}" class="img-fluid rounded shadow">
+          </a>
+          <div>
+            <h5 class="nombre-planta fw-bold fs-6">
+              <a href="/planta/{{ planta.id }}">{{ planta.nombre }}</a>
+            </h5>
+            <p class="precio-unidad">${{ planta.precio }} por unidad</p>
+
+         
+          </div>
         </div>
+
+        <div class="col-6 col-lg-3">
+          <p class="mb-0">Cantidad: <strong>{{ planta.cantidad }}</strong></p>
+        </div>
+
+        <div class="col-6 col-lg-3 text-end">
+          <h5 class="total-linea">${{ (planta.precio * planta.cantidad)|number_format(2, ',', '.') }}</h5>
+        </div>
+      </div>
+      {% endfor %}
+
+     
+
+         <!-- Botón Actualizar aquí debajo de la imagen -->
+            <form method="POST" class="mt-2">
+              <label for="actualizar_{{ loop.index }}" class="d-inline-block text-center">
+                <input type="submit" class="d-none" id="actualizar_{{ loop.index }}" name="actualizar_carrito_{{ planta.id }}">
+                <span class="d-inline-block bg-light border rounded-circle p-2 me-2">
+                  <i class="fas fa-sync-alt text-success"></i>
+                </span>
+                <p class="d-inline-block text-success mb-0">Actualizar Carrito</p>
+              </label>
+            </form>
+
+
+
+      <div class="row mt-4">
+        <div class="col-12 text-end">
+          <p class="total-general fs-5">Total: ${{ total }}</p>
+          <a href="/finalizar-compra" class="btn btn-outline-success mt-2 mb-5">Finalizar Compra</a>
+        </div>
+      </div>
+
     </div>
+  </div>
+</div>
+{% else %}
+<div class="text-center py-5">
+  <h4>Tu carrito está vacío 🛒</h4>
+  <a href="/" class="btn btn-success mt-2 mb-5">Volver a la tienda</a>
+</div>
 {% endif %}
+
+{% include 'layouts/footer.html.twig' %}
+
+</body>
+</html>

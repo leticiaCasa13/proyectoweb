@@ -111,6 +111,41 @@ class HomeController
     
    }
 
+   public function buscarPlantas()
+{
+    $termino = $_GET['q'] ?? '';
+
+    if (empty($termino)) {
+        echo $this->twig->render('buscar.html.twig', [
+            'plantas' => [],
+            'query' => $termino
+        ]);
+        return;
+    }
+
+    $sql = "
+        SELECT 
+            p.id, 
+            p.nombre, 
+            p.descripcion, 
+            p.precio, 
+            COALESCE(i.imagen_url, 'https://via.placeholder.com/150') AS imagen_url
+        FROM plantas p
+        LEFT JOIN imagenes i ON p.id = i.planta_id
+        WHERE p.nombre LIKE ?
+    ";
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute(['%' . $termino . '%']);
+    $plantas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    echo $this->twig->render('buscar.html.twig', [
+        'plantas' => $plantas,
+        'query' => $termino
+    ]);
+}
+
+
 }
 
 
