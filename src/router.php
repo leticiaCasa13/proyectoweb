@@ -213,6 +213,14 @@ function getRouteData($request) {
     }
 
 
+    // Cambiar idioma según la selección del usuario
+     if (isset($_POST['language'])) {
+    $_SESSION['lang'] = $_POST['language'] === 'en' ? 'en_US' : 'es_ES';
+    header('Location: ' . $_SERVER['PHP_SELF']); // Redirige para aplicar el cambio de idioma
+}
+
+
+
 
     return null;
 }

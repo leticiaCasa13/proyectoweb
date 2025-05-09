@@ -6,7 +6,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
-
 <header style="background-color: #ccc; padding: 20px 0;">
   <nav class="navbar navbar-expand-lg navbar-dark container">
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain"
@@ -23,7 +22,7 @@
         <li class="nav-item"><a class="nav-link text-white custom-hover" href="/plantas">Plantas</a></li>
         <li class="nav-item"><a class="nav-link text-white custom-hover" href="/quienes_somos">Quiénes Somos</a></li>
       </ul>
-
+    
       <!-- Área derecha -->
       <div class="d-flex align-items-center gap-3">
 
@@ -31,7 +30,7 @@
         <div class="d-flex align-items-center gap-2">
           <div id="loginLink">
             <a href="/login" class="text-white text-decoration-none custom-hover">
-              <i class="bi bi-person-circle"></i> Ingresar
+              <i class="bi bi-person-circle"></i>  Ingresar
             </a>
           </div>
 
@@ -56,6 +55,13 @@
           </button>
         </form>
 
+        <form method="POST" action="">
+          <select name="language" onchange="this.form.submit()">
+             <option value="es" {% if lang == 'es_ES' %}selected{% endif %}>Español</option>
+             <option value="en" {% if lang == 'en_US' %}selected{% endif %}>English</option>
+          </select>
+       </form>
+
       </div>
     </div>
   </nav>
@@ -67,7 +73,6 @@
         text-decoration: none;
     }
 </style>
-
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {

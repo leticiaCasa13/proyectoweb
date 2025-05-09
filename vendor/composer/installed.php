@@ -5,7 +5,7 @@
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '4e62993bc6f8138381ebe7f4b044733461aabb3a',
+        'reference' => '7c5b8aeee982a0332c17db77b037cd43b0240208',
         'name' => '__root__',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '4e62993bc6f8138381ebe7f4b044733461aabb3a',
+            'reference' => '7c5b8aeee982a0332c17db77b037cd43b0240208',
             'dev_requirement' => false,
         ),
         'firebase/php-jwt' => array(
@@ -284,12 +284,12 @@
             ),
         ),
         'symfony/translation' => array(
-            'pretty_version' => 'v6.4.19',
-            'version' => '6.4.19.0',
+            'pretty_version' => 'v6.4.21',
+            'version' => '6.4.21.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/translation',
             'aliases' => array(),
-            'reference' => '3b9bf9f33997c064885a7bfc126c14b9daa0e00e',
+            'reference' => 'bb92ea5588396b319ba43283a5a3087a034cb29c',
             'dev_requirement' => false,
         ),
         'symfony/translation-contracts' => array(

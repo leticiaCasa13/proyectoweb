@@ -55,4 +55,3 @@ class ContactController
         echo $twig->render('contact.html.twig', $data);
     }
 }
-

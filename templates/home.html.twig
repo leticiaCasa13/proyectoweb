@@ -18,6 +18,7 @@
  <main class="container my-5 py-5 text-center" style="padding-bottom: 50px;">
 
     <h2 class="page-title">{{ title }}</h2>
+
    
 
     <!-- Logo centrado -->
@@ -27,7 +28,8 @@
 
     <!-- Aquí va el menú de categorías con las que vienen desde la BD -->
        {% if categorias is empty %}
-    <p>No hay categorías disponibles.</p>
+    <p>{{_("No hay categorías disponibles.")}}</p>
+
 {% else %}
     <nav class="menu-secundario text-center my-3" style="margin-top: 50px;">
         <ul class="nav justify-content-center" style="gap: 20px; list-style: none; padding: 0;">
@@ -46,7 +48,7 @@
 <hr class="my-5">
 <div class="text-center mt-4">
     <a href="/grafico-categorias" class="btn btn-outline-secondary">
-        📊 Ver estadísticas de categorías
+        📊 {{_("Ver estadísticas de categorías") }}
     </a>
 </div>
 
