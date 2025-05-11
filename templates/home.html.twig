@@ -8,55 +8,44 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="/css/styles.css"> <!-- Enlace al archivo CSS local -->
-
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-    {% include 'layouts/header.html.twig' %} {# Aquí se incluye el menú principal #}
+    {% include 'layouts/header.html.twig' %}
 
- <main class="container my-5 py-5 text-center" style="padding-bottom: 50px;">
+    <main class="container my-5 py-5 text-center" style="padding-bottom: 50px;">
+        <h2 class="page-title">{{ title }}</h2>
 
-    <h2 class="page-title">{{ title }}</h2>
+        <!-- Logo centrado -->
+        <div class="logo-container">
+            <img src="/assets/images/logo1.png" alt="Aquí va el logo" style="width:300px; height: auto;">
+        </div>
 
-   
+        <!-- Menú de categorías -->
+        {% if categorias is empty %}
+            <p>No hay categorías disponibles.</p>
+        {% else %}
+            <nav class="menu-secundario text-center my-3" style="margin-top: 50px;">
+                <ul class="nav justify-content-center" style="gap: 20px; list-style: none; padding: 0;">
+                    {% for categoria in categorias %}
+                        <li>
+                            <a href="/categoria/{{ categoria.id }}" class="btn btn-verde-claro mt-3">
+                                {{ categoria.nombre }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </nav>
+        {% endif %}
 
-    <!-- Logo centrado -->
-    <div class="logo-container">
-        <img src="/assets/images/logo1.png" alt="Aquí va el logo" style="width:300px; height: auto;">
-    </div>
+        <hr class="my-5">
+        <div class="text-center mt-4">
+            <a href="/grafico-categorias" class="btn btn-outline-secondary">
+                📊 Ver estadísticas de categorías
+            </a>
+        </div>
+    </main>
 
-    <!-- Aquí va el menú de categorías con las que vienen desde la BD -->
-       {% if categorias is empty %}
-    <p>{{_("No hay categorías disponibles.")}}</p>
-
-{% else %}
-    <nav class="menu-secundario text-center my-3" style="margin-top: 50px;">
-        <ul class="nav justify-content-center" style="gap: 20px; list-style: none; padding: 0;">
-            {% for categoria in categorias %}
-                <li>
-                    <a href="/categoria/{{ categoria.id }}" class="btn btn-verde-claro mt-3">
-                        {{ categoria.nombre }}
-                    </a>
-                </li>
-            {% endfor %}
-        </ul>
-    </nav>
-{% endif %}
-
-
-<hr class="my-5">
-<div class="text-center mt-4">
-    <a href="/grafico-categorias" class="btn btn-outline-secondary">
-        📊 {{_("Ver estadísticas de categorías") }}
-    </a>
-</div>
-
-
-</main>
-
-
-    {% include 'layouts/footer.html.twig' %} {# Aquí se incluye el pie de página #}
-
+    {% include 'layouts/footer.html.twig' %}
 </body>
 </html>

@@ -91,17 +91,9 @@ require_once __DIR__ . '/../src/router.php';
 // Obtener la plantilla y los datos desde el enrutador
 $routeData = getRouteData($_SERVER['REQUEST_URI']);
 
-require_once __DIR__ . '/../src/controller/BaseController.php';
-$baseController = new \controller\BaseController();
 
-if ($routeData) {
-    echo $baseController->render($routeData['template'], $routeData['data']);
-} else {
-    http_response_code(404);
-    echo $baseController->render('404.html.twig', [
-        'title' => 'Página no encontrada',
-    ]);
+
+
+if ($routeData && isset($routeData['template'])) {
+    echo $twig->render($routeData['template'], $routeData['data']);
 }
-
-
-

@@ -189,6 +189,21 @@ function getRouteData($request) {
             }
             break;
                
+        case '/admin/dashboard':
+            return [
+                'template' => 'admin/dashboard.html.twig',
+                'data' => [],
+            ];
+
+        case '/loginAdmin':
+            return [
+                'controller' => 'AdminController',
+                'method' => 'login',
+                'params' => [],
+            ];
+
+
+        
                 
     }
 
