@@ -43,23 +43,36 @@ class AdminController
     }
 
     public function login()
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $username = $_POST['username'] ?? '';
-            $password = $_POST['password'] ?? '';
+{
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $username = $_POST['username'] ?? '';
+        $password = $_POST['password'] ?? '';
 
-            $stmt = $this->db->prepare("SELECT * FROM User WHERE username = :username");
-            $stmt->execute(['username' => $username]);
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt = $this->db->prepare("SELECT * FROM User WHERE username = :username");
+        $stmt->execute(['username' => $username]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if ($user && password_verify($password, $user['password'])) {
-                $_SESSION['admin_logged_in'] = true;
-                header("Location: /admin/dashboard");
-                exit;
-            } else {
-                echo "<p style='color:red;'>Usuario o contraseña incorrectos</p>";
+        if ($user && password_verify($password, $user['password'])) {
+            if($user['role'] !== 'admin'){
+                //contraseña correcta pero No es admin
+                echo "<p style='color:red;'>Acceso denegado: no tienes permisos de Administrador.</p>";
+            }else{
+               // Guardar datos del usuario en la sesión
+               $_SESSION['user'] = [
+                   'id'       => $user['id'],
+                   'username' => $user['username'],
+                   'role'     => $user['role'],
+               ];
+               header("Location: /admin/dashboard");
+               exit;
+
             }
+           
+        } else {
+            echo "<p style='color:red;'>Usuario o contraseña incorrectos</p>";
         }
+    } 
+            
 
         // Mostrar formulario
         echo <<<HTML

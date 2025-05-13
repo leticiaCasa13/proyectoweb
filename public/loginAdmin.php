@@ -1,5 +1,4 @@
 <?php
-
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -12,15 +11,12 @@ require_once __DIR__ . '/../src/controller/AdminController.php';
 
 use controller\AdminController;
 
-// Capturamos el array devuelto por database.php
-$config = require __DIR__ . '/../public/api/config/database.php';    // ← misma ruta aquí
-
-// Si ya estás logueado, redirige directamente al dashboard
-if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
+// Si ya existe sesión de usuario admin, redirigir
+if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'admin') {
     header("Location: /admin/dashboard");
     exit;
 }
 
-// Crear el controlador pasando el array $config correctamente
+$config = require __DIR__ . '/../public/api/config/database.php';
 $adminController = new AdminController($config);
 $adminController->login();

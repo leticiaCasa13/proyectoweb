@@ -12,33 +12,29 @@ require_once __DIR__ . '/../src/controller/AdminController.php'; // ruta correct
 
 use controller\AdminController;
 
-// Verificación: ¿el administrador está logueado?
-if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
-    echo "No estás logueado. Redirigiendo a loginAdmin.php...<br>";  // Depuración
-    header("Location: /loginAdmin.php"); // asegúrate que esta ruta existe
+//verifica el admin logeado
+
+if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
+
+    header("Location: /loginAdmin.php");
     exit;
 }
 
 
-// Crear el controlador
-echo "Creando controlador...<br>";  // Depuración
-$adminController = new AdminController();
+// 2) Carga de configuración
+$config = require __DIR__ . '/api/config/database.php';
 
-// Router simple basado en URI
+// 3) Creamos el controlador PASÁNDOLE la configuración
+$adminController = new AdminController($config);
+
+// 4) Router simple basado en URI
 $uri = $_SERVER['REQUEST_URI'];
-echo "URI: $uri<br>";  // Depuración
 
 if (str_contains($uri, '/admin/plantas')) {
-    echo "Acción: listarPlantas<br>";  // Depuración
     $adminController->listarPlantas();
 } elseif (str_contains($uri, '/admin/categorias')) {
-    echo "Acción: listarCategorias<br>";  // Depuración
     $adminController->listarCategorias();
-} elseif (str_contains($uri, '/admin/dashboard')) {
-    echo "Acción: dashboard<br>";  // Depuración
-    $adminController->dashboard();
 } else {
-    // Redirigir por defecto al dashboard
-    echo "Redirigiendo al dashboard...<br>";  // Depuración
+    // Por defecto, dashboard
     $adminController->dashboard();
 }
