@@ -11,12 +11,10 @@ require_once __DIR__ . '/../src/controller/AdminController.php';
 
 use controller\AdminController;
 
-// Si ya existe sesión de usuario admin, redirigir
-if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'admin') {
-    header("Location: /admin/dashboard");
-    exit;
-}
 
 $config = require __DIR__ . '/../public/api/config/database.php';
 $adminController = new AdminController($config);
-$adminController->login();
+
+
+// Mostrar siempre el formulario, aunque haya sesión iniciada
+$adminController->login(); // Solo aquí se valida al usuario y se redirige si cumple

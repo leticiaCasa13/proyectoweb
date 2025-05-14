@@ -3,7 +3,7 @@ namespace controller;
 
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
-use src\Database; // asegurarse de importar correctamente
+use src\Database;
 use PDO;
 
 if (!class_exists('src\Database')) {
@@ -21,7 +21,7 @@ class AdminController
         $this->twig = new Environment($loader);
 
         // Inicializar conexión a la base de datos
-        $this->db= Database::getInstance($config)->getConnection();
+        $this->db = Database::getInstance($config)->getConnection();
     }
 
     public function listarPlantas()
@@ -36,56 +36,69 @@ class AdminController
 
     public function dashboard()
     {
-        echo "Entramos a dashboard()<br>";
-        echo $this->twig->render('dashboard.html.twig', [
-            'titulo' => 'Panel de Administración',
+        // Consulta para obtener cantidad de plantas por categoría
+        $stmt = $this->db->prepare("
+            SELECT c.nombre AS categoria, COUNT(p.id) AS cantidad
+            FROM Categoria c
+            LEFT JOIN Planta p ON c.id = p.categoria_id
+            GROUP BY c.nombre
+        ");
+        $stmt->execute();
+        $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Separar nombres y cantidades para el gráfico
+        $categorias = [];
+        $cantidades = [];
+
+        foreach ($resultados as $fila) {
+            $categorias[] = $fila['categoria'];
+            $cantidades[] = $fila['cantidad'];
+        }
+
+        // Renderizar vista al final, con los datos listos
+         echo $this->twig->render('dashboard.html.twig', [
+         'titulo' => 'Panel de Administración',
+         'categorias' => $categorias,    // <-- Sin json_encode
+         'cantidades' => $cantidades     // <-- Sin json_encode
         ]);
+
     }
 
     public function login()
-{
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $username = $_POST['username'] ?? '';
-        $password = $_POST['password'] ?? '';
+    {
+        $error = null;
 
-        $stmt = $this->db->prepare("SELECT * FROM User WHERE username = :username");
-        $stmt->execute(['username' => $username]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $username = $_POST['username'] ?? '';
+            $password = $_POST['password'] ?? '';
 
-        if ($user && password_verify($password, $user['password'])) {
-            if($user['role'] !== 'admin'){
-                //contraseña correcta pero No es admin
-                echo "<p style='color:red;'>Acceso denegado: no tienes permisos de Administrador.</p>";
-            }else{
-               // Guardar datos del usuario en la sesión
-               $_SESSION['user'] = [
-                   'id'       => $user['id'],
-                   'username' => $user['username'],
-                   'role'     => $user['role'],
-               ];
-               header("Location: /admin/dashboard");
-               exit;
+            $stmt = $this->db->prepare("SELECT * FROM User WHERE username = :username");
+            $stmt->execute(['username' => $username]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
+            if ($user && password_verify($password, $user['password'])) {
+                if ($user['role'] !== 'admin') {
+                    // Contraseña correcta pero no es admin
+                    $error = "Acceso denegado: no tienes permisos de Administrador.";
+                } else {
+                    // Guardar datos del usuario en la sesión
+                    $_SESSION['user'] = [
+                        'id'       => $user['id'],
+                        'username' => $user['username'],
+                        'role'     => $user['role'],
+                    ];
+                    header("Location: /admin/dashboard");
+                    exit;
+                }
+            } else {
+                $error = "Usuario o contraseña incorrectos.";
             }
-           
-        } else {
-            echo "<p style='color:red;'>Usuario o contraseña incorrectos</p>";
         }
-    } 
-            
 
-        // Mostrar formulario
-        echo <<<HTML
-        <h2>Login Administrador</h2>
-        <form method="post">
-            <label for="username">Usuario:</label><br>
-            <input type="text" name="username" id="username" required><br><br>
-
-            <label for="password">Contraseña:</label><br>
-            <input type="password" name="password" id="password" required><br><br>
-
-            <button type="submit">Ingresar</button>
-        </form>
-        HTML;
+        // Mostrar siempre el formulario (con o sin error)
+        echo $this->twig->render('loginAdmin.html.twig', [
+            'titulo' => 'Login Administrador',
+            'error'  => $error
+        ]);
     }
 }
