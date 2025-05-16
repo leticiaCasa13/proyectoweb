@@ -31,11 +31,11 @@ function aplicarIdioma() {
     $set = setlocale(LC_ALL, $localeFull);
 
     // Mostrar resultado del intento
-    if (!$set) {
-        echo "<p><strong>⚠️ setlocale falló para:</strong> $localeFull</p>";
-    } else {
-        echo "<p><strong>✅ setlocale aplicado:</strong> $set</p>";
-    }
+   // if (!$set) {
+    //    echo "<p><strong>⚠️ setlocale falló para:</strong> $localeFull</p>";
+    //} else {
+    //    echo "<p><strong>✅ setlocale aplicado:</strong> $set</p>";
+   // }
 
     // Configurar dominio y ruta de traducciones
     $directorioLocales = realpath(__DIR__ . '/../../locales');
@@ -44,12 +44,12 @@ function aplicarIdioma() {
     textdomain("messages");
 
     // 🔍 Diagnóstico (opcional)
-    echo "<p><strong>Ruta buscada:</strong> $directorioLocales</p>";
+
     $moPath = "$directorioLocales/$locale/LC_MESSAGES/messages.mo";
-    echo "<p><strong>¿Existe archivo .mo?:</strong> " . (file_exists($moPath) ? 'Sí ✅' : 'No ❌') . "</p>";
-    echo "<p><strong>Setlocale actual:</strong> " . setlocale(LC_ALL, 0) . "</p>";
-    echo "<p><strong>Idioma en sesión:</strong> " . $_SESSION['lang'] . "</p>";
-    echo "<pre>";
-    var_dump(gettext("No hay categorías disponibles."));
-    echo "</pre>";
+
+   
+   
+    
+
+
 }

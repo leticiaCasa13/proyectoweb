@@ -1,0 +1,48 @@
+{% block title %}Administrar Plantas{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Listado de Plantas</h1>
+
+    <a href="/admin/planta/nueva" class="btn btn-success mb-3">➕ Añadir Planta</a>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Imagen</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Categoría</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for planta in plantas %}
+                <tr>
+                    <td>{{ planta.id }}</td>
+                    <td>{{ planta.nombre }}</td>
+                    <td><img src="/public/assets/img/{{ planta.imagen_url }}" width="60" alt="{{ planta.nombre }}"></td>
+                    <td>{{ planta.descripcion }}</td>
+                    <td>{{ planta.precio }}</td>
+                    <td>{{ planta.categoria }}</td>
+                    <td>
+                        <a href="/admin/planta/editar/{{ planta.id }}" class="btn btn-sm btn-primary">✏️ Editar</a>
+                        <form action="/admin/planta/eliminar/{{ planta.id }}" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar esta planta?')">🗑️ Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7" class="text-center">No hay plantas registradas.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+
+

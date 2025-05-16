@@ -20,33 +20,23 @@ class AdminController
         $loader = new FilesystemLoader(__DIR__ . '/../../templates/admin');
         $this->twig = new Environment($loader);
 
-        // Inicializar conexión a la base de datos
         $this->db = Database::getInstance($config)->getConnection();
-    }
-
-    public function listarPlantas()
-    {
-        echo "Aquí se mostrarán las plantas (aún sin implementar).";
-    }
-
-    public function listarCategorias()
-    {
-        echo "Aquí se mostrarán las categorías (aún sin implementar).";
     }
 
     public function dashboard()
     {
-        // Consulta para obtener cantidad de plantas por categoría
+     // Consulta para obtener cantidad de plantas por categoría
         $stmt = $this->db->prepare("
             SELECT c.nombre AS categoria, COUNT(p.id) AS cantidad
             FROM Categoria c
             LEFT JOIN Planta p ON c.id = p.categoria_id
             GROUP BY c.nombre
         ");
+        
+
         $stmt->execute();
         $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Separar nombres y cantidades para el gráfico
         $categorias = [];
         $cantidades = [];
 
@@ -55,14 +45,133 @@ class AdminController
             $cantidades[] = $fila['cantidad'];
         }
 
-        // Renderizar vista al final, con los datos listos
-         echo $this->twig->render('dashboard.html.twig', [
-         'titulo' => 'Panel de Administración',
-         'categorias' => $categorias,    // <-- Sin json_encode
-         'cantidades' => $cantidades     // <-- Sin json_encode
+        echo $this->twig->render('dashboard.html.twig', [
+            'titulo' => 'Panel de Administración',
+            'categorias' => $categorias,
+            'cantidades' => $cantidades
         ]);
-
     }
+
+     public function listarPlantas()
+   {
+     // Consulta real a la tabla 'plantas'
+     $stmt = $this->db->prepare("SELECT id, nombre, descripcion, precio, imagen_url, categoria_id FROM plantas");
+     $stmt->execute();
+     $plantas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+     echo $this->twig->render('adplantas.html.twig', [
+        'titulo' => 'Gestión de Plantas',
+        'plantas' => $plantas
+    ]);
+   }
+
+ 
+
+
+
+    public function listarCategorias()
+   {
+     // Consulta real a la tabla 'categorias'
+     $stmt = $this->db->prepare("SELECT id, nombre FROM categorias");
+     $stmt->execute();
+     $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+     echo $this->twig->render('adcategorias.html.twig', [
+        'titulo' => 'Gestión de Categorías',
+        'categorias' => $categorias
+     ]);
+   }
+
+
+   public function formularioCrearPlanta()
+{
+    // Obtén las categorías para el selector
+    $stmt = $this->db->query("SELECT id, nombre FROM categorias");
+    $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    echo $this->twig->render('formPlanta.html.twig', [
+        'titulo' => 'Nueva Planta',
+        'categorias' => $categorias
+    ]);
+}
+
+
+    public function crearPlanta()
+  {
+    $nombre = $_POST['nombre'];
+    $descripcion = $_POST['descripcion'];
+    $precio = $_POST['precio'];
+    $imagen_url = $_POST['imagen_url']; // o manejar subida
+    $categoria_id = $_POST['categoria_id'];
+
+    $stmt = $this->db->prepare("INSERT INTO plantas (nombre, descripcion, precio, imagen_url, categoria_id) VALUES (?, ?, ?, ?, ?)");
+    $stmt->execute([$nombre, $descripcion, $precio, $imagen_url, $categoria_id]);
+
+    header('Location: /admin/adplantas');
+  }
+
+
+  public function formularioEditarPlanta($id)
+{
+    $stmt = $this->db->prepare("SELECT * FROM plantas WHERE id = ?");
+    $stmt->execute([$id]);
+    $planta = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    $categorias = $this->db->query("SELECT id, nombre FROM categoria")->fetchAll(PDO::FETCH_ASSOC);
+
+    echo $this->twig->render('formPlanta.html.twig', [
+        'titulo' => 'Editar Planta',
+        'planta' => $planta,
+        'categorias' => $categorias
+    ]);
+}
+
+    public function actualizarPlanta($id)
+  {
+    $nombre = $_POST['nombre'];
+    $descripcion = $_POST['descripcion'];
+    $precio = $_POST['precio'];
+    $imagen_url = $_POST['imagen_url'];
+    $categoria_id = $_POST['categoria_id'];
+
+    $stmt = $this->db->prepare("UPDATE plantas SET nombre = ?, descripcion = ?, precio = ?, imagen_url = ?, categoria_id = ? WHERE id = ?");
+    $stmt->execute([$nombre, $descripcion, $precio, $imagen_url, $categoria_id, $id]);
+
+    header('Location: /admin/adplantas');
+  }
+
+    public function eliminarPlanta($id)
+ {
+    $stmt = $this->db->prepare("DELETE FROM plantas WHERE id = ?");
+    $stmt->execute([$id]);
+
+    header('Location: /admin/adplantas');
+ }
+
+     public function getPlantasData()
+   {
+    // Consulta para obtener datos de plantas para el bubble chart
+    $stmt = $this->db->prepare("
+        SELECT 
+            p.nombre,
+            c.nombre AS categoria,
+            p.precio AS valor1,           -- Eje X: Precio
+            p.id AS valor2,               -- Eje Y: Podrías usar 'stock' si lo tuvieras
+            LENGTH(p.descripcion) AS tamaño  -- Tamaño: longitud de la descripción (ajustado)
+        FROM plantas p
+        JOIN categorias c ON p.categoria_id = c.id
+    ");
+
+    $stmt->execute();
+    $plantas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    header("Content-Type: application/json");
+    echo json_encode($plantas);
+    exit;
+    }
+
+
+
 
     public function login()
     {
@@ -78,10 +187,8 @@ class AdminController
 
             if ($user && password_verify($password, $user['password'])) {
                 if ($user['role'] !== 'admin') {
-                    // Contraseña correcta pero no es admin
                     $error = "Acceso denegado: no tienes permisos de Administrador.";
                 } else {
-                    // Guardar datos del usuario en la sesión
                     $_SESSION['user'] = [
                         'id'       => $user['id'],
                         'username' => $user['username'],
@@ -95,10 +202,29 @@ class AdminController
             }
         }
 
-        // Mostrar siempre el formulario (con o sin error)
         echo $this->twig->render('loginAdmin.html.twig', [
             'titulo' => 'Login Administrador',
             'error'  => $error
         ]);
     }
+
+
+    public function logout()
+  {
+    // Iniciar sesión si no está iniciada
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    // Destruir todas las variables de sesión
+    $_SESSION = [];
+
+    // Destruir la sesión
+    session_destroy();
+
+    // Redirigir al login del admin
+    header('Location: /loginAdmin');
+    exit;
+   
+  }
 }

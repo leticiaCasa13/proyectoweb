@@ -195,6 +195,13 @@ function getRouteData($request) {
                 'data' => [],
             ];
 
+        case '/admin/api/plantas-data':
+            return [
+                'controller' => 'AdminController',
+                'method' => 'getPlantasData',
+                'params' => [],
+            ];
+
         case '/loginAdmin':
             return [
                 'controller' => 'AdminController',
@@ -202,10 +209,65 @@ function getRouteData($request) {
                 'params' => [],
             ];
 
+        case '/admin/logout':
+            return [
+                'controller' => 'AdminController',
+                'method' => 'logout',
+                'params' => [],
+            ];
 
-        
+         case '/admin/adplantas':
+            return [
+               'controller' => 'AdminController',
+               'method' => 'listarPlantas',
+               'params' => [],
+            ];
+
+
+        case '/admin/adcategorias':
+            return [
+               'controller' => 'AdminController',
+               'method' => 'listarCategorias',
+               'params' => [],
+            ];
+
+        case '/admin/planta/nueva':
+            return [
+              'controller' => 'AdminController',
+              'method' => 'formularioCrearPlanta',
+              'params' => [],
+            ];
+
+        case '/admin/planta/crear':
+            return [
+             'controller' => 'AdminController',
+             'method' => 'crearPlanta',
+             'params' => [],
+            ];
+
+        case preg_match('#^/admin/planta/editar/(\d+)$#', $request, $matches):
+            return [
+            'controller' => 'AdminController',
+            'method' => 'formularioEditarPlanta',
+            'params' => ['id' => $matches[1]],
+            ];
+
+        case preg_match('#^/admin/planta/actualizar/(\d+)$#', $request, $matches):
+            return [
+            'controller' => 'AdminController',
+            'method' => 'actualizarPlanta',
+            'params' => ['id' => $matches[1]],
+            ];
+
+       case preg_match('#^/admin/planta/eliminar/(\d+)$#', $request, $matches):
+            return [
+            'controller' => 'AdminController',
+            'method' => 'eliminarPlanta',
+            'params' => ['id' => $matches[1]],
+            ];
+    
                 
-    }
+        }
 
 
 

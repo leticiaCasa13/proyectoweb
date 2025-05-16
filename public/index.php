@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['REQUEST_URI'] === '/api/l
 }
 
 // Mensaje de conexión
-echo "¡Conexión establecida!<br>";
+//echo "¡Conexión establecida!<br>";
 
 // Configuración de Twig
 $loader = new \Twig\Loader\FilesystemLoader(__DIR__ . '/../templates');

@@ -1,0 +1,37 @@
+
+
+{% block title %}Administrar Categorías{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Listado de Categorías</h1>
+
+    <a href="/admin/categorias/nueva" class="btn btn-success mb-3">➕ Añadir Categoría</a>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for categoria in categorias %}
+                <tr>
+                    <td>{{ categoria.id }}</td>
+                    <td>{{ categoria.nombre }}</td>
+                    <td>
+                        <a href="/admin/categorias/editar/{{ categoria.id }}" class="btn btn-sm btn-primary">✏️ Editar</a>
+                        <a href="/admin/categorias/eliminar/{{ categoria.id }}" class="btn btn-sm btn-danger">🗑️ Eliminar</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3" class="text-center">No hay categorías disponibles.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

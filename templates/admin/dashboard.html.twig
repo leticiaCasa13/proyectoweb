@@ -85,27 +85,46 @@
 
 <div class="container-fluid">
     <div class="row">
-        <!-- Sidebar -->
-        <div class="col-md-2 sidebar">
-            <h4 class="mb-4">Webscraping Admin</h4>
-            <div class="mb-5">
-             <img src="/assets/images/logAdmin.jpg" alt="Admin" class="rounded-circle">
-               <p class="mt-4">Admin</p>
+       <!-- Sidebar -->
+<div class="col-md-2 sidebar">
+   <h3 class="titulo-principal text-secondary mb-4 text-center" style="font-size: 1.25rem; font-family: 'Segoe UI', sans-serif;">
+    Administrador
+</h3>
 
-            </div>
-            <a href="/admin/dashboard"><i class="bi bi-house-door-fill"></i> Dashboard</a>
-            <a href="/admin/plantas"><i class="bi bi-flower1"></i> Plantas</a>
-            <a href="/admin/categorias"><i class="bi bi-tags-fill"></i> Categorías</a>
-            <a href="/"><i class="bi bi-globe"></i> Volver al sitio</a>
-            <form action="/admin/logout" method="post" class="mt-4">
-                <button class="btn btn-verde-claro btn-sm w-100">Cerrar Sesión</button>
 
-            </form>
-        </div>
+    <div class="mb-5 text-center">
+        <img src="/assets/images/logoAdm.jpg" alt="Admin" class="rounded-circle img-fluid">
+        <p class="mt-4" style="font-family: Arial, sans-serif; color: #333; font-size: 1.1rem;">
+            Admin
+        </p>
+    </div>
+
+    <!-- Menú lateral -->
+   <a href="/admin/dashboard" class="d-block text-secondary mb-4" style="font-family: Arial, sans-serif; font-size: 1.1rem;">
+      <i class="bi bi-house-door-fill me-2"></i>Dashboard
+   </a>
+    <a href="/admin/adplantas" class="d-block text-secondary mb-4" style="font-family: Arial, sans-serif; font-size: 1.1rem;">
+      <i class="bi bi-flower1 me-2"></i>Plantas
+    </a>
+    <a href="/admin/adcategorias" class="d-block text-secondary mb-4" style="font-family: Arial, sans-serif; font-size: 1.1rem;">
+       <i class="bi bi-tags-fill me-2"></i>Categorías
+    </a>
+
+   <a href="/" class="d-block text-secondary mb-4" style="font-family: Arial, sans-serif; font-size: 1.1rem;">
+     <i class="bi bi-globe me-2"></i>Volver al sitio
+   </a>
+
+
+    <form action="/admin/logout" method="post" class="mt-4">
+        <button class="btn btn-verde-claro btn-sm w-100 text-secondary">Cerrar Sesión</button>
+    </form>
+</div>
+
 
         <!-- Main Content -->
         <div class="col-md-10 p-4">
-            <h2>Dashboard</h2>
+           <h1 class="titulo-principal text-secondary mb-5" style="font-size: 3rem; font-family: 'Segoe UI', sans-serif;">Dashboard</h1>
+
 
             <!-- Cards -->
             <div class="row mt-4">
@@ -141,52 +160,111 @@
 
 
             <!-- Placeholder para gráfico -->
-            <div class="card mt-4 p-4 shadow">
-                <h5>Distribución por Categoría de Plantas</h5>
-                <p>Aquí irá un gráfico próximamente.</p>
-                <canvas id="graficoCategorias" width="400" height="400"></canvas>
-            </div>
+          <div class="card mt-4 p-4 shadow">
+            <h2 class="titulo-principal text-success mb-2">Gráfico de Burbujas - Plantas por Categoría</h5>
+            <canvas id="bubbleChart" width="600" height="400"></canvas>
+          </div>
         </div>
     </div>
 </div>
     
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/chart.js "></script>
 
-    <script>
-        const ctx = document.getElementById('graficoCategorias').getContext('2d');
+<script>
+async function cargarYMostrarGrafico() {
+    try {
+        const respuesta = await fetch('/admin/api/plantas-data');
+        const datos = await respuesta.json();
 
-         const categorias = {{ categorias|json_encode()|raw }};
-         const cantidades = {{ cantidades|json_encode()|raw }};
+        const datosAgrupados = procesarDatos(datos);
+        dibujarGrafico(datosAgrupados);
+    } catch (error) {
+        console.error('Error al obtener los datos:', error);
+    }
+}
 
+function procesarDatos(datos) {
+    const categorias = {};
 
-        const colores = [
-            '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'
-        ];
+    datos.forEach(planta => {
+        if (!categorias[planta.categoria]) {
+            categorias[planta.categoria] = [];
+        }
 
-        new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: categorias,
-                datasets: [{
-                    data: cantidades,
-                    backgroundColor: colores,
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                    },
+        categorias[planta.categoria].push({
+            x: planta.valor1, // Ejemplo: precio
+            y: planta.valor2, // Ejemplo: ID o stock
+            r: planta.tamaño   // Tamaño proporcional
+        });
+    });
+
+    return categorias;
+}
+
+function dibujarGrafico(datosAgrupados) {
+    const datasets = [];
+    const colores = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'];
+
+    let i = 0;
+    for (const categoria in datosAgrupados) {
+        datasets.push({
+            label: categoria,
+            data: datosAgrupados[categoria],
+            backgroundColor: colores[i % colores.length],
+            borderColor: 'rgba(0,0,0,0.5)',
+            borderWidth: 1
+        });
+        i++;
+    }
+
+    const ctx = document.getElementById('bubbleChart').getContext('2d');
+
+    new Chart(ctx, {
+        type: 'bubble',
+        data: { datasets },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    type: 'linear',
+                    position: 'bottom',
                     title: {
                         display: true,
-                        text: 'Cantidad de Plantas por Categoría'
+                        text: 'Precio'
+                    }
+                },
+                y: {
+                    type: 'linear',
+                    position: 'left',
+                    title: {
+                        display: true,
+                        text: 'ID / Stock'
                     }
                 }
+            },
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.dataset.label}: (${context.parsed.x}, ${context.parsed.y})`;
+                        }
+                    }
+                },
+                title: {
+                    display: true,
+                    text: 'Distribución de Plantas por Categoría (Gráfico de Burbujas)'
+                }
             }
-        });
-    </script>
+        }
+    });
+}
+
+// Cargar el gráfico cuando se cargue la página
+document.addEventListener('DOMContentLoaded', cargarYMostrarGrafico);
+</script>
 </body>
 </html>
 
