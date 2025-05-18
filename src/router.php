@@ -252,22 +252,37 @@ function getRouteData($request) {
             'params' => ['id' => $matches[1]],
             ];
 
+       case '/admin/planta/guardar':
+           if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            return [
+            'controller' => 'AdminController',
+            'method' => 'crearPlanta',
+            'params' => [],
+            ];
+        }
+        break;
+
+
         case preg_match('#^/admin/planta/actualizar/(\d+)$#', $request, $matches):
+          if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             return [
             'controller' => 'AdminController',
             'method' => 'actualizarPlanta',
             'params' => ['id' => $matches[1]],
-            ];
+           ];
+        }
+        break;
 
-       case preg_match('#^/admin/planta/eliminar/(\d+)$#', $request, $matches):
+        case preg_match('#^/admin/planta/eliminar/(\d+)$#', $request, $matches):
             return [
             'controller' => 'AdminController',
             'method' => 'eliminarPlanta',
             'params' => ['id' => $matches[1]],
-            ];
+            ];  
     
                 
         }
+
 
 
 

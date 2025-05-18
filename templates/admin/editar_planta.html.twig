@@ -1,0 +1,12 @@
+class="h3 text-secondary mb-5" method="post" action="/admin/planta/actualizar/{{ planta.id }}">
+    <label>Nombre</label>
+    <input type="text" name="nombre" value="{{ planta.nombre }}">
+
+    <label>Precio</label>
+    <input type="text" name="precio" value="{{ planta.precio }}">
+
+    <label>Descripción</label>
+    <textarea name="descripcion">{{ planta.descripcion }}</textarea>
+
+    <button type="submit">Guardar cambios</button>
+</form>

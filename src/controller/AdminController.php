@@ -101,7 +101,17 @@ class AdminController
     $nombre = $_POST['nombre'];
     $descripcion = $_POST['descripcion'];
     $precio = $_POST['precio'];
-    $imagen_url = $_POST['imagen_url']; // o manejar subida
+
+    if (!empty($_FILES['imagen_file']['name'])) {
+    $target_dir = __DIR__ . "/../../public/assets/images/";
+    $image_name = uniqid() . '-' . basename($_FILES["imagen_file"]["name"]);
+    move_uploaded_file($_FILES["imagen_file"]["tmp_name"], $target_dir . $image_name);
+    $imagen_url = $image_name;
+
+    } else {
+    $imagen_url = $_POST['imagen_url'] ?? null;
+    }
+
     $categoria_id = $_POST['categoria_id'];
 
     $stmt = $this->db->prepare("INSERT INTO plantas (nombre, descripcion, precio, imagen_url, categoria_id) VALUES (?, ?, ?, ?, ?)");
@@ -117,28 +127,45 @@ class AdminController
     $stmt->execute([$id]);
     $planta = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    $categorias = $this->db->query("SELECT id, nombre FROM categoria")->fetchAll(PDO::FETCH_ASSOC);
+    $categorias = $this->db->query("SELECT id, nombre FROM categorias")->fetchAll(PDO::FETCH_ASSOC);
 
     echo $this->twig->render('formPlanta.html.twig', [
         'titulo' => 'Editar Planta',
         'planta' => $planta,
         'categorias' => $categorias
     ]);
-}
+ }
 
-    public function actualizarPlanta($id)
-  {
-    $nombre = $_POST['nombre'];
-    $descripcion = $_POST['descripcion'];
-    $precio = $_POST['precio'];
-    $imagen_url = $_POST['imagen_url'];
-    $categoria_id = $_POST['categoria_id'];
+ public function actualizarPlanta($id)
+{
+    // Validar que los datos necesarios estén en $_POST
+    $nombre = $_POST['nombre'] ?? '';
+    $descripcion = $_POST['descripcion'] ?? '';
+    $precio = $_POST['precio'] ?? 0;
+    $categoria_id = $_POST['categoria_id'] ?? null;
 
-    $stmt = $this->db->prepare("UPDATE plantas SET nombre = ?, descripcion = ?, precio = ?, imagen_url = ?, categoria_id = ? WHERE id = ?");
+    // Manejo de la imagen (opcional)
+    if (!empty($_FILES['imagen_file']['name'])) {
+        $target_dir = __DIR__ . "/../../public/assets/images/";
+        $image_name = uniqid() . '-' . basename($_FILES["imagen_file"]["name"]);
+        move_uploaded_file($_FILES["imagen_file"]["tmp_name"], $target_dir . $image_name);
+        $imagen_url = $image_name;
+    } else {
+        // Si no se sube una imagen nueva, mantener la actual (que viene en un campo oculto o similar)
+        $imagen_url = $_POST['imagen_url'] ?? null;
+    }
+
+    // Actualizar en la base de datos
+    $stmt = $this->db->prepare(
+        "UPDATE plantas SET nombre = ?, descripcion = ?, precio = ?, imagen_url = ?, categoria_id = ? WHERE id = ?"
+    );
     $stmt->execute([$nombre, $descripcion, $precio, $imagen_url, $categoria_id, $id]);
 
+    // Redirigir después de actualizar
     header('Location: /admin/adplantas');
-  }
+    exit;
+}
+
 
     public function eliminarPlanta($id)
  {

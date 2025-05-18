@@ -7,12 +7,13 @@ error_reporting(E_ALL);
 require_once __DIR__ . '/../vendor/autoload.php';
 $config = require __DIR__ . '/api/config/database.php';
 
-require_once __DIR__ . '/../src/controller/AuthController.php';
+require_once __DIR__ . '/../src/controller/AuthController.php'; //autenticación
 require_once __DIR__ . '/i18n/lang.php'; // ???
 
-require_once __DIR__ . '/../src/controller/CartController.php';  // FALTABA ESTA LÍNEA
+require_once __DIR__ . '/../src/controller/CartController.php';  // carrito
 use controller\CartController;                                    
 
+require_once __DIR__ . '/../src/controller/AdminController.php';   //panel Admin
 
 
 
@@ -45,6 +46,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['REQUEST_URI'] === '/api/l
 // Mensaje de conexión
 //echo "¡Conexión establecida!<br>";
 
+use controller\AdminController;
+
+
 // Configuración de Twig
 $loader = new \Twig\Loader\FilesystemLoader(__DIR__ . '/../templates');
 $twig = new \Twig\Environment($loader, [
@@ -53,16 +57,64 @@ $twig = new \Twig\Environment($loader, [
 ]);
 
 
+// EDITAR planta (GET)
+if (preg_match('#^/admin/planta/editar/(\d+)$#', $_SERVER['REQUEST_URI'], $m) && $_SERVER['REQUEST_METHOD'] === 'GET') {
+    $adminController = new AdminController($twig, $config);
+    $adminController->formularioEditarPlanta($m[1]);
+    exit;
+}
+
+// ACTUALIZAR planta (POST)
+if (preg_match('#^/admin/planta/actualizar/(\d+)$#', $_SERVER['REQUEST_URI'], $m) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $adminController = new AdminController($twig, $config);
+    $adminController->actualizarPlanta($m[1]);
+    exit;
+}
+
+
+// AÑADIR PLANTA (POST)
+if ($_SERVER['REQUEST_METHOD'] === 'POST'
+    && preg_match('#^/admin/planta/guardar$#', $_SERVER['REQUEST_URI'])
+) {
+    $ctrl = new AdminController($twig, $config);
+    $ctrl->crearPlanta();
+    exit;
+}
+
+
+// 1) Mostrar formulario de “Añadir Planta” (GET)
+if (preg_match('#^/admin/planta/nueva$#', $_SERVER['REQUEST_URI']) 
+    && $_SERVER['REQUEST_METHOD'] === 'GET') 
+{
+    $ctrl = new AdminController($twig, $config);
+    $ctrl->formularioCrearPlanta(); 
+    exit;
+}
+
+// 2) Procesar formulario de “Añadir Planta” (POST)
+if (preg_match('#^/admin/planta/guardar$#', $_SERVER['REQUEST_URI']) 
+    && $_SERVER['REQUEST_METHOD'] === 'POST') 
+{
+    $ctrl = new AdminController($twig, $config);
+    $ctrl->crearPlanta(); 
+    exit;
+}
+
+
+// --- Eliminar planta (POST) ---
+if (preg_match('#^/admin/planta/eliminar/(\d+)$#', $_SERVER['REQUEST_URI'], $m)
+    && $_SERVER['REQUEST_METHOD'] === 'POST') 
+{
+    $ctrl = new AdminController($twig, $config);
+    $ctrl->eliminarPlanta($m[1]);
+    exit;
+}
 
 
 // Agregar la función de traducción a Twig
-$twig->addGlobal('lang', $_SESSION['lang']);
-$twig->addFunction(new \Twig\TwigFunction('_', fn($string) => gettext($string),
-['is_safe' => ['html']]));
-
-
-
-
+//$twig->addGlobal('lang', $_SESSION['lang']);
+//$twig->addFunction(new \Twig\TwigFunction('_', fn($string) => gettext($string),
+//['is_safe' => ['html']]));
 
 
 
@@ -93,7 +145,7 @@ $routeData = getRouteData($_SERVER['REQUEST_URI']);
 
 
 
-
+//si solo se renderiza la plantilla
 if ($routeData && isset($routeData['template'])) {
     echo $twig->render($routeData['template'], $routeData['data']);
 }
