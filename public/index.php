@@ -131,6 +131,8 @@ if ($uri === '/procesar-pago' && $method === 'POST') {
 
 
 
+
+
 // Función para generar URLs de recursos estáticos
 $twig->addFunction(new \Twig\TwigFunction('asset', function ($path) {
     return '/' . ltrim($path, '/');  // Esto asegura que la ruta sea relativa a la carpeta public
