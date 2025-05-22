@@ -17,8 +17,13 @@
 
 {% include 'layouts/header.html.twig' %}
 
+{% if error %}
+<div class="alert alert-danger">
+    ⚠️ Faltan datos obligatorios para procesar el pago.
+</div>
+{% endif %}
 
-{% block title %}Pago{% endblock %}
+
 
 {% block body %}
 <div class="container my-5">

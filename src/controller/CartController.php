@@ -6,17 +6,19 @@ class CartController {
     private $twig;
     private $config;
 
-    public function __construct($twig) {
+    public function __construct($twig) {      //inicializa la vista twig, carga de conexión a la bbdd
         $this->twig = $twig;
         $this->config = require __DIR__ . '/../../public/api/config/database.php';
-
     }
+
+    //crea conexión PDO, con los datos (parámetros) de la bbdd
 
     private function getPDO() {
         $dsn = "mysql:host={$this->config['host']};port={$this->config['port']};dbname={$this->config['database']};charset={$this->config['charset']}";
         return new \PDO($dsn, $this->config['username'], $this->config['password']);
     }
-
+    
+    //agrega planta, si existe suma la cantidad, 
     public function agregar() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             http_response_code(405);
@@ -27,6 +29,7 @@ class CartController {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
+        
 
         if (!isset($_SESSION['carrito'])) {
             $_SESSION['carrito'] = [];
@@ -104,38 +107,38 @@ class CartController {
         ]);
     }
 
-    public function procesarPago() {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            http_response_code(405);
-            echo "Método no permitido";
-            exit;
-        }
-    
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-    
-        // Validamos datos mínimos (sólo por práctica, sin validación profunda)
-        $tarjeta = $_POST['tarjeta'] ?? '';
-        $nombre = $_POST['nombre'] ?? '';
-        $vencimiento = $_POST['vencimiento'] ?? '';
-        $cvv = $_POST['cvv'] ?? '';
-    
-        if (!$tarjeta || !$nombre || !$vencimiento || !$cvv) {
-            echo "Faltan datos del formulario.";
-            exit;
-        }
-    
-        // Aquí podrías registrar el pedido en una tabla "pedidos", por ejemplo (opcional)
-    
-        // Vaciamos el carrito
-        unset($_SESSION['carrito']);
-    
-        // Mostramos página de confirmación
-        echo $this->twig->render('confirmación.html.twig', [
-            'nombre' => $nombre
-        ]);
+   public function procesarPago() {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        http_response_code(405);
+        echo "Método no permitido";
+        exit;
     }
+
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    // Validación simple (esto se puede mejorar luego)
+    $tarjeta = $_POST['tarjeta'] ?? '';
+    $nombre = $_POST['nombre'] ?? '';
+    $vencimiento = $_POST['vencimiento'] ?? '';
+    $cvv = $_POST['cvv'] ?? '';
+
+    if (!$tarjeta || !$nombre || !$vencimiento || !$cvv) {
+        // Redirigir al formulario de pago con mensaje de error
+        header('Location: /finalizar-compra?error=1');
+        exit;
+    }
+
+    // (Simulación de pago exitosa)
+    // Limpiar carrito, registrar pedido, etc. Aquí pondrás tu lógica real
+    $_SESSION['carrito'] = []; // Limpia el carrito, por ejemplo
+
+    // Redirige a la página de confirmación
+    header('Location: /gracias');
+    exit;
+}
+
     
     
 

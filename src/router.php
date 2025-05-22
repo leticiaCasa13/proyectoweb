@@ -143,11 +143,18 @@ function getRouteData($request) {
                 'template' => 'pago.html.twig',
                 'data' => [
                         'title' => 'Finalizar Compra',
+                        'error' => isset($_GET['error']) && $_GET['error'] == 1
                     ],
             ];
-                   
-            
 
+     
+        case '/gracias':
+            return [
+                'template' => 'gracias.html.twig',
+                'data' => ['title' => 'Gracias por tu compra'],
+            ];
+
+            
         case '/planta-carrito':
             return [
                 'template' => 'plantaCarrito.html.twig',
@@ -181,13 +188,6 @@ function getRouteData($request) {
                     'method' => 'buscarPlantas',
                     'params' => [],
             ];
-
-        case '/procesar-pago':
-            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                echo $twig->render('confirmacion.html.twig');
-                exit;
-            }
-            break;
                
         case '/admin/dashboard':
             return [
